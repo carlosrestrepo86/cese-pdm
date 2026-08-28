@@ -42,7 +42,7 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-int delay = 200;
+int delay_time = 200;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,26 +95,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	  /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+	  /* USER CODE BEGIN 3 */
 
-	  //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-	  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  // Practica 1
+	  /* Punto 1
+	     PWM de 400 ms con ciclo de dureza 50% con visualizacion en un led (LD2).*/
+
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, 1);
-	  HAL_Delay(delay);
+	  HAL_Delay(delay_time);
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, 0);
-	  HAL_Delay(delay);
+	  HAL_Delay(delay_time);
 
-	  // Practica 2
+	  /* Punto 2
+	     Cambiar el tiempo de encendido entre 200 ms y 500 ms mediante el pulsador (B1).*/
+
 	  if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-		  //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, 1);
 		  HAL_Delay(10);
-		  if(delay == 200){
-			  delay = 500;
+		  if(delay_time == 200){
+			  delay_time = 500;
 		  }else {
-			  delay = 200;
+			  delay_time = 200;
 		  }
 	  }
 
