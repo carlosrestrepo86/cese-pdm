@@ -25,6 +25,10 @@
 
 UART_HandleTypeDef huart2;
 delay_t delay;
+tick_t delay_times[3] = {1000, 200, 100};                   // Vector de tiempos para el delay.
+uint8_t sel_time = 0;                                       // Variable para seleccion de los tiempos.
+uint8_t i = 0;                                              // Variable para contar los flancos de la señal.
+uint8_t vector_size = sizeof(delay_times) / sizeof(tick_t); // Variable con el numero de elementos del vector de tiempos.
 
 /* ============================================================== */
 
@@ -48,13 +52,31 @@ int main(void)
 	GPIO_Init();
 	USART2_UART_Init();
 
-	/* Initialize a non-blocking delay */
-	delayInit(&delay, 100);
+	/* Initialize the non-blocking delay */
+	delayInit(&delay, delay_times[sel_time]);
+	sel_time++;
 
 	while (1)
 	{
-		if (delayRead(&delay)){
+		// Verificar si ya se cumplio el tiempo programado.
+		if (delayRead(&delay)) {
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			i++;
+
+			/* Verificar si se cumplieron las 5 repeticiones del delay.
+			 * Cada periodo (--__ on/off) equivale a 2 incrementos de la variable i.
+			 */
+			if (i == 10) {
+				delayWrite(&delay, delay_times[sel_time]); // Cambiar el tiempo del delay.
+				i = 0;
+
+				// Condicional para seleccionar otro tiempo en el vector, verificando el correcto acceso.
+				if (sel_time == (vector_size - 1)) {
+					sel_time = 0;
+				} else {
+					sel_time++;
+				}
+			}
 		}
 	}
 }
