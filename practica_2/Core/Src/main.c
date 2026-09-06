@@ -24,6 +24,7 @@
 /* ========================== VARIABLES ========================= */
 
 UART_HandleTypeDef huart2;
+delay_t delay;
 
 /* ============================================================== */
 
@@ -47,8 +48,14 @@ int main(void)
 	GPIO_Init();
 	USART2_UART_Init();
 
+	/* Initialize a non-blocking delay */
+	delayInit(&delay, 100);
+
 	while (1)
 	{
+		if (delayRead(&delay)){
+			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+		}
 	}
 }
 
