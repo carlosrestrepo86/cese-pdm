@@ -73,7 +73,7 @@ int main(void)
 				delayWrite(&delay, delay_times[sel_time]); // Cambiar el tiempo del delay.
 				i = 0;
 
-				// Condicional para seleccionar otro tiempo en el vector, verificando el correcto acceso.
+				// Condicional para seleccionar otro tiempo en el vector, verificando el acceso correcto.
 				if (sel_time == (VECTOR_SIZE - 1)) {
 					sel_time = 0;
 				} else {
