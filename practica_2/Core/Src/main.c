@@ -20,15 +20,18 @@
 #include "main.h"
 
 /* ============================================================== */
+/* ========================== DEFINITIONS ======================= */
 
+#define VECTOR_SIZE 3
+
+/* ============================================================== */
 /* ========================== VARIABLES ========================= */
 
 UART_HandleTypeDef huart2;
 delay_t delay;
-tick_t delay_times[3] = {1000, 200, 100};                   // Vector de tiempos para el delay.
-uint8_t sel_time = 0;                                       // Variable para seleccion de los tiempos.
-uint8_t i = 0;                                              // Variable para contar los flancos de la señal.
-uint8_t vector_size = sizeof(delay_times) / sizeof(tick_t); // Variable con el numero de elementos del vector de tiempos.
+tick_t delay_times[VECTOR_SIZE] = {1000, 200, 100};  // Vector de tiempos para el delay (valor maximo 4.294.967 ms = 4.294.967 seg).
+uint8_t sel_time = 0;                                // Variable para seleccion de los tiempos.
+uint8_t i = 0;                                       // Variable para contar los flancos de la señal.
 
 /* ============================================================== */
 
@@ -71,7 +74,7 @@ int main(void)
 				i = 0;
 
 				// Condicional para seleccionar otro tiempo en el vector, verificando el correcto acceso.
-				if (sel_time == (vector_size - 1)) {
+				if (sel_time == (VECTOR_SIZE - 1)) {
 					sel_time = 0;
 				} else {
 					sel_time++;
@@ -184,21 +187,28 @@ static void GPIO_Init(void)
 
 /**
   * @brief Delay Initialization Function
-  * @param Delay structure and duration
+  * @param delay: Pointer to the delay structure
+  * @param duration: Time duration in milliseconds
   * @retval None
   */
 void delayInit(delay_t *delay, tick_t duration){
+
+	if (delay == NULL || duration == 0) return;
+
 	delay->duration = duration;
 	delay->running = false;
 }
 
 /**
   * @brief Delay Read Function
-  * @param Delay Structure
+  * @param delay: Pointer to the delay structure
   * @retval False --> The delay is running.
   *         True  --> The delay ended.
   */
 bool_t delayRead(delay_t *delay){
+
+	if (delay == NULL) return false;
+
 	bool_t delay_state = false;
 
 	if (delay->running){
@@ -216,11 +226,15 @@ bool_t delayRead(delay_t *delay){
 }
 
 /**
-  * @brief
-  * @param Delay structure and duration
+  * @brief Delay Write Function
+  * @param delay: Pointer to the delay structure
+  * @param duration: Time duration in milliseconds
   * @retval None
   */
 void delayWrite(delay_t *delay, tick_t duration){
+
+	if (delay == NULL || duration == 0) return;
+
 	delay->duration = duration;
 }
 
