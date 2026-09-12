@@ -22,25 +22,30 @@
 ## Configuración y Uso
 
 ### Clonar y Abrir el Proyecto
+
 ```bash
-git clone https://github.com
+git clone https://github.com/carlosrestrepo86/cese-pdm.git
 ```
 Abre **STM32CubeIDE**, ve a `File -> Import -> Existing Projects into Workspace` y selecciona la carpeta raíz del proyecto.
 
 ## 📂 Estructura del Código de la API
-El proyecto organiza el control del periférico separando la lógica de los datos para evitar dependencias circulares:
+El proyecto organiza el blink del led separando la lógica del delay no bloqueante del código principal "main.c":
+
 ```text
-📂 Core
- ├── 📂 Inc
- │    ├── API_types.h  <-- Estructuras de datos, Enums y Macros de configuración.
- │    ├── API.h        <-- Interfaz pública con prototipos de funciones.
- │    └── main.h
- └── 📂 Src
-      ├── API.c        <-- Implementación lógica y control de hardware de la API.
-      └── main.c
+📂 Mi_Proyecto_STM32
+ ├── 📂 Core
+ │    ├── 📂 Inc
+ │    │    └── main.h         <-- Definiciones globales y prototipos del sistema.
+ │    └── 📂 Src
+ │         └── main.c         <-- Punto de entrada principal y bucle de control.
+ └── 📂 Drivers
+      └── 📂 API
+           ├── 📂 Inc
+           │    └── API_delay.h  <-- Interfaz pública de la API de tiempos (prototipos).
+           └── 📂 Src
+                └── API_delay.c  <-- Implementación lógica de los retardos.
 ```
 
-## 🛠️ Diagnóstico de Errores
-El proyecto cuenta con dos mecanismos de contención:
-- **`Error_Handler()`**: Se activa ante fallos críticos de hardware del HAL (bloquea el MCU y parpadea el LED de emergencia).
-- **`assert_failed()`**: Captura errores de paso de parámetros inválidos en las funciones HAL e imprime la línea y archivo exacto por la consola UART antes de congelar el sistema.
+## Diagnóstico de Errores
+El proyecto cuenta con un mecanismo de contención:
+- **`API_Error_Handler()`**: Se activa cuando a las funciones de control de delay se le envian parámetros erroneos (ejemplo puntero NULL o tiempo del delay en 0).
