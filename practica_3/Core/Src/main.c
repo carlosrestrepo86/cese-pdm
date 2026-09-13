@@ -50,6 +50,9 @@ int main(void)
 	GPIO_Init();
 	USART2_UART_Init();
 
+	/*
+	 * Definición de las estructuras para el delay y las secuencias.
+	 */
 	static delay_t delay;
 	const sequence_t secuencias[] = {
 			{500, 5},

@@ -393,6 +393,9 @@ int main(void)
 	USART2_UART_Init();
  8000542:	f000 f8dd 	bl	8000700 <USART2_UART_Init>
 
+	/*
+	 * Definición de las estructuras para el delay y las secuencias.
+	 */
 	static delay_t delay;
 	const sequence_t secuencias[] = {
  8000546:	4b34      	ldr	r3, [pc, #208]	@ (8000618 <main+0xe8>)
@@ -402,11 +405,11 @@ int main(void)
  800054e:	c40f      	stmia	r4!, {r0, r1, r2, r3}
  8000550:	e895 000f 	ldmia.w	r5, {r0, r1, r2, r3}
  8000554:	e884 000f 	stmia.w	r4, {r0, r1, r2, r3}
-			{100, 1},
-			{1000, 1}
+			{100, 5},
+			{100, 5},
+			{1000, 5}
 	};
-//	const uint32_t TIEMPOS[] = {500, 100, 100, 1000};
-//	const uint8_t REPETICIONES [] = {1, 1, 1, 1};
+
 	const uint8_t tam_array = sizeof(secuencias) / sizeof(secuencias[0]);
  8000558:	2304      	movs	r3, #4
  800055a:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
