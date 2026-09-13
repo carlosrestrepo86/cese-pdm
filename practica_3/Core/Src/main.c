@@ -55,10 +55,10 @@ int main(void)
 	 */
 	static delay_t delay;
 	const sequence_t secuencias[] = {
-			{500, 5},
-			{100, 5},
-			{100, 5},
-			{1000, 5}
+			{500, 1},
+			{100, 1},
+			{100, 1},
+			{1000, 1}
 	};
 
 	const uint8_t tam_array = sizeof(secuencias) / sizeof(secuencias[0]);
