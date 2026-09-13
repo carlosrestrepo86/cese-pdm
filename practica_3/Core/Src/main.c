@@ -51,16 +51,22 @@ int main(void)
 	USART2_UART_Init();
 
 	static delay_t delay;
-	const uint32_t TIEMPOS[] = {500, 100, 100, 1000};
-	const uint8_t REPETICIONES [] = {1, 1, 1, 1};
-	const uint8_t tam_array = sizeof(TIEMPOS) / sizeof(uint32_t);
+	const sequence_t secuencias[] = {
+			{500, 5},
+			{100, 5},
+			{100, 5},
+			{1000, 5}
+	};
+
+	const uint8_t tam_array = sizeof(secuencias) / sizeof(secuencias[0]);
 	uint8_t selector_secuencia = 0;
 	uint8_t contador_secuencias = 1;
 
-	/* Inicializar el led en ON
-	 * Inicializar el delay con el primer tiempo del array TIEMPOS */
+	/* Inicializar el led en ON.
+	 * Inicializar el delay con el primer tiempo configurado en el array TIEMPOS[].
+	 */
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-	delayInit(&delay, TIEMPOS[selector_secuencia]);
+	delayInit(&delay, secuencias[selector_secuencia].tiempo);
 	selector_secuencia++;
 
 	while (1)
@@ -72,12 +78,12 @@ int main(void)
 			/* Verificar si se cumplieron las repeticiones del delay.
 			 * Cada periodo (--__ on/off) por eso se multiplica por 2.
 			 */
-			if (contador_secuencias == REPETICIONES[selector_secuencia] * 2) {
+			if (contador_secuencias == secuencias[selector_secuencia].repeticiones * 2) {
 				contador_secuencias = 1;
 
 				// Verificar que el delay no este en modo running antes de cambiar su valor.
 				if (!delayIsRunning(&delay)){
-					delayWrite(&delay, TIEMPOS[selector_secuencia]);
+					delayWrite(&delay, secuencias[selector_secuencia].tiempo);
 					selector_secuencia++;
 				}
 

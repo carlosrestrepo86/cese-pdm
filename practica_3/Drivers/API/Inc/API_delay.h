@@ -20,6 +20,11 @@
 typedef uint32_t tick_t;
 typedef bool bool_t;
 
+typedef struct {
+	uint32_t tiempo;
+	uint8_t repeticiones;
+}sequence_t;
+
 typedef struct{
 	tick_t startTime;
 	tick_t duration;

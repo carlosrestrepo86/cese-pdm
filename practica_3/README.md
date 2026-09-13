@@ -5,9 +5,13 @@
 - Generación de un blink en led "LD2" utilizando las funciones del módulo.
 - API dedicada para el manejo de las funciones del delay.
 - El led trabaja con un ciclo de dureza de 50%.
-- Se puede generar varias señales con diferentes tiempos, estas señales se definen con dos arreglos:
-	- const uint32_t TIEMPOS[] = {500, 100, 100, 1000}; define los tiempos de las señales. Tiene 4 señales definidas
-	- const uint8_t REPETICIONES [] = {1, 1, 1, 1};     define la cantidad de veces que se repite la señal.
+- Se puede generar varias señales con diferentes tiempos, estas señales se definen mediante la estructura "sequence_t":
+	const sequence_t secuencias[] = {
+			{500, 5},
+			{100, 5},
+			{100, 5},
+			{1000, 5}
+	};
 - Gestión de errores en los parámetros recibidos por las funciones mediante.
 
 ## Requisitos de Hardware y Software

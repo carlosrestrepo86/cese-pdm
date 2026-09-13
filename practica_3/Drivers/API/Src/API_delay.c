@@ -86,6 +86,11 @@ bool_t delayIsRunning(delay_t *delay){
 	return delay->running;
 }
 
+/**
+  * @brief Función para control de errores.
+  * @param void.
+  * @retval void
+  */
 static void API_Error_Handler(void){
 	while(1);
 }
