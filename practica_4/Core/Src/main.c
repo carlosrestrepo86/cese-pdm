@@ -28,8 +28,6 @@
 /* ========================== VARIABLES ========================= */
 
 UART_HandleTypeDef huart2;
-static delay_t delay;
-const uint32_t delay_times[] = {100, 500};
 
 /* ============================================================== */
 /* ===================== FUNCTION PROTOTYPES ==================== */
@@ -43,6 +41,9 @@ static void Error_Handler(void);
 
 int main(void)
 {
+	static delay_t delay;
+	const uint32_t delay_times[] = {100, 500};
+
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
