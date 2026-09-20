@@ -1,2 +1,2 @@
 # cese-pdm
-Repositorio para la materia de Programación de Microcontroladores
+Repositorio con las prácticas de la materia de Programación de Microcontroladores
