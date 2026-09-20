@@ -40,7 +40,7 @@ void debounceFSM_init(){
 }
 
 /**
-  * @brief Función para actualizar la maquina de estados.
+  * @brief Función que actualiza la maquina de estados.
   * @param None
   * @retval None
   */
