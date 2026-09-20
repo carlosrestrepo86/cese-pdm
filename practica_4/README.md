@@ -6,12 +6,6 @@
 - API dedicada para el manejo de las funciones del delay.
 - El led trabaja con un ciclo de dureza de 50%.
 - Se puede generar varias señales con diferentes tiempos, estas señales se definen mediante la estructura "sequence_t":
-	const sequence_t secuencias[] = {
-			{500, 5},
-			{100, 5},
-			{100, 5},
-			{1000, 5}
-	};
 - Gestión de errores en los parámetros recibidos por las funciones mediante.
 
 ## Requisitos de Hardware y Software
