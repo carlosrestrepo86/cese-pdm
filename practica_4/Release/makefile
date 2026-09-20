@@ -62,8 +62,8 @@ all: main-build
 main-build: practica_4.elf secondary-outputs
 
 # Tool invocations
-practica_4.elf practica_4.map: $(OBJS) $(USER_OBJS) C:\Users\c_and\STM32CubeIDE\workspace_2.0.0\practica_4\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "practica_4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\c_and\STM32CubeIDE\workspace_2.0.0\practica_4\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="practica_4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+practica_4.elf practica_4.map: $(OBJS) $(USER_OBJS) C:\Users\c_and\Desktop\Especializacion\ CESE\Programacion\ de\ Microcontroladores\practica_4\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "practica_4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\c_and\Desktop\Especializacion CESE\Programacion de Microcontroladores\practica_4\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="practica_4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

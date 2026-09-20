@@ -9,7 +9,7 @@
 
 /* ===================== FUNCTION PROTOTYPES ==================== */
 
-static void API_Error_Handler(void);
+static void Delay_Error_Handler(void);
 
 /* ============================================================== */
 
@@ -22,7 +22,7 @@ static void API_Error_Handler(void);
 void delayInit(delay_t *delay, tick_t duration){
 
 	if (delay == NULL || duration == 0)
-		API_Error_Handler();
+		Delay_Error_Handler();
 
 	delay->duration = duration;
 	delay->running = false;
@@ -37,7 +37,7 @@ void delayInit(delay_t *delay, tick_t duration){
 bool_t delayRead(delay_t *delay){
 
 	if (delay == NULL)
-		API_Error_Handler();
+		Delay_Error_Handler();
 
 	bool_t delay_state = false;
 
@@ -62,7 +62,7 @@ bool_t delayRead(delay_t *delay){
 void delayWrite(delay_t *delay, tick_t duration){
 
 	if (delay == NULL || duration == 0)
-		API_Error_Handler();
+		Delay_Error_Handler();
 
 	delay->duration = duration;
 }
@@ -76,7 +76,7 @@ void delayWrite(delay_t *delay, tick_t duration){
 bool_t delayIsRunning(delay_t *delay){
 
 	if (delay == NULL)
-		API_Error_Handler();
+		Delay_Error_Handler();
 
 	return delay->running;
 }
@@ -86,7 +86,7 @@ bool_t delayIsRunning(delay_t *delay){
   * @param void.
   * @retval void
   */
-static void API_Error_Handler(void){
+static void Delay_Error_Handler(void){
 	while(1);
 }
 

@@ -16,7 +16,7 @@ S_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Core/Startup/%.o: ../Core/Startup/%.s Core/Startup/subdir.mk
-	arm-none-eabi-gcc -mcpu=cortex-m4 -c -I"C:/Users/c_and/STM32CubeIDE/workspace_2.0.0/practica_4/Drivers/delay" -I"C:/Users/c_and/STM32CubeIDE/workspace_2.0.0/practica_4/Drivers/debounce" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -c -I"C:/Users/c_and/Desktop/Especializacion CESE/Programacion de Microcontroladores/practica_4/Drivers/delay" -I"C:/Users/c_and/Desktop/Especializacion CESE/Programacion de Microcontroladores/practica_4/Drivers/debounce" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
 
 clean: clean-Core-2f-Startup
 

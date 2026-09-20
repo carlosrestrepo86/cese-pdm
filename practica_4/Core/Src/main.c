@@ -28,6 +28,8 @@
 /* ========================== VARIABLES ========================= */
 
 UART_HandleTypeDef huart2;
+static delay_t delay;
+const uint32_t delay_times[] = {100, 500};
 
 /* ============================================================== */
 /* ===================== FUNCTION PROTOTYPES ==================== */
@@ -51,10 +53,21 @@ int main(void)
 	GPIO_Init();
 	USART2_UART_Init();
 	debounceFSM_init();
+	delayInit(&delay, delay_times[0]);
 
 	while (1)
 	{
 		debounceFSM_update();
+
+		if (readKey()){
+			if (delay.duration == delay_times[0])
+				delayWrite(&delay, delay_times[1]);
+			else
+				delayWrite(&delay, delay_times[0]);
+		}
+
+		if (delayRead(&delay))
+			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	}
 }
 

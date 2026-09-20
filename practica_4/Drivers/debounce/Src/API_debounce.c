@@ -6,9 +6,21 @@
  */
 #include "API_debounce.h"
 
-static debounceState_t estadoActual;
+/* ========================== TYPEDEFS ========================== */
+
+typedef enum{
+	BUTTON_UP,
+	BUTTON_FALLING,
+	BUTTON_DOWN,
+	BUTTON_RAISING,
+}debounceState_t;
+
+/* ============================================================== */
+
+static debounceState_t current_state;
 const uint8_t time_debounce = 40;
-static delay_t delay;
+static delay_t debounce_delay;
+static bool_t button_pressed_flag = false;
 
 /* ===================== FUNCTION PROTOTYPES ==================== */
 
@@ -23,8 +35,8 @@ static void buttonReleased();
   * @retval None
   */
 void debounceFSM_init(){
-	estadoActual = BUTTON_UP;
-	delayInit(&delay, time_debounce);
+	current_state = BUTTON_UP;
+	delayInit(&debounce_delay, time_debounce);
 }
 
 /**
@@ -33,49 +45,54 @@ void debounceFSM_init(){
   * @retval None
   */
 void debounceFSM_update(){
-	switch(estadoActual){
+	switch(current_state){
 	case BUTTON_UP:
 		if(!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-			estadoActual = BUTTON_FALLING;
+			current_state = BUTTON_FALLING;
 		}
 		break;
 	case BUTTON_FALLING:
-		if(delayRead(&delay)){
+		if(delayRead(&debounce_delay)){
 			if(!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-				estadoActual = BUTTON_DOWN;
+				current_state = BUTTON_DOWN;
 				buttonPressed();
 			}else{
-				estadoActual = BUTTON_UP;
+				current_state = BUTTON_UP;
 			}
 		}
 		break;
 	case BUTTON_DOWN:
 		if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-			estadoActual = BUTTON_RAISING;
+			current_state = BUTTON_RAISING;
 		}
 		break;
 	case BUTTON_RAISING:
-		if(delayRead(&delay)){
+		if(delayRead(&debounce_delay)){
 			if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-				estadoActual = BUTTON_UP;
+				current_state = BUTTON_UP;
 				buttonReleased();
 			}else{
-				estadoActual = BUTTON_DOWN;
+				current_state = BUTTON_DOWN;
 			}
 		}
 		break;
 	default:
-		buttonReleased();
 		debounceFSM_init();
 	}
 }
 
 static void buttonPressed(){
-	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+	button_pressed_flag = true;
 }
 
 static void buttonReleased(){
-	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 }
 
-bool_t readKey();
+bool_t readKey(){
+	bool_t button_status = button_pressed_flag;
+
+	if (button_pressed_flag)
+		button_pressed_flag = false;
+
+	return button_status;
+}
