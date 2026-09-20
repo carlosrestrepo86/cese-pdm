@@ -37,16 +37,13 @@ El proyecto organiza el blink del led separando la lógica del delay no bloquean
  │    └── 📂 Src
  │         └── main.c         <-- Punto de entrada principal y bucle de control.
  └── 📂 Drivers
-      └── 📂 debounce
-           ├── 📂 Inc
+      └── 📂 API
+           ├── 📂 inc
            │    └── API_debounce.h  <-- Interfaz pública de la API para anti-rebote (prototipos).
-           └── 📂 Src
+           │    └── API_delay.h     <-- Interfaz pública de la API de retardos (prototipos).
+           └── 📂 src
                 └── API_debounce.c  <-- Implementación lógica del anti-rebote.
-           📂 delay
-           ├── 📂 Inc
-           │    └── API_delay.h     <-- Interfaz pública de la API de tiempos (prototipos).
-           └── 📂 Src
-                └── API_delay.c     <-- Implementación lógica de los retardos.
+                └── API_delay.c     <-- Implementación lógica de los retardos.            
 ```
 
 ## Diagnóstico de Errores
