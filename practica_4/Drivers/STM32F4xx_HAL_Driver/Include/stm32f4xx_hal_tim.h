@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../Include/stm32f4xx_hal_def.h"
+#include <stm32f4xx_hal_def.h>
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -1873,7 +1873,7 @@ typedef  void (*pTIM_CallbackTypeDef)(TIM_HandleTypeDef *htim);  /*!< pointer to
 /* End of private macros -----------------------------------------------------*/
 
 /* Include TIM HAL Extended module */
-#include "../Include/stm32f4xx_hal_tim_ex.h"
+#include <stm32f4xx_hal_tim_ex.h>
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup TIM_Exported_Functions TIM Exported Functions

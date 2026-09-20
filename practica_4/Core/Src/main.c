@@ -17,9 +17,9 @@
 
 /* ========================== INCLUDES ========================== */
 
+#include <API_debounce.h>
+#include <API_delay.h>
 #include "main.h"
-#include "API_delay.h"
-#include "API_debounce.h"
 
 /* ============================================================== */
 /* ========================== DEFINITIONS ======================= */
@@ -52,13 +52,17 @@ int main(void)
 	/* Initialize all configured peripherals */
 	GPIO_Init();
 	USART2_UART_Init();
+
+	/* Inicializar la maquina de estados y el delay */
 	debounceFSM_init();
 	delayInit(&delay, delay_times[0]);
 
 	while (1)
 	{
+		/* Actualizar la maquina de estados. */
 		debounceFSM_update();
 
+		/* Validar que el boton fue presionado para cambiar el tiempo del delay. */
 		if (readKey()){
 			if (delay.duration == delay_times[0])
 				delayWrite(&delay, delay_times[1]);
@@ -66,6 +70,7 @@ int main(void)
 				delayWrite(&delay, delay_times[0]);
 		}
 
+		/* Comprobar que se cumplio el tiempo del delay antes de cambiar el estado del led. */
 		if (delayRead(&delay))
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	}

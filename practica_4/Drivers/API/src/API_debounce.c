@@ -4,7 +4,7 @@
  *  Created on: 17/09/2026
  *      Author: c_and
  */
-#include "API_debounce.h"
+#include <API_debounce.h>
 
 /* ========================== TYPEDEFS ========================== */
 
@@ -20,7 +20,7 @@ typedef enum{
 static debounceState_t current_state;
 const uint8_t time_debounce = 40;
 static delay_t debounce_delay;
-static bool_t button_pressed_flag = false;
+static bool_t key_pressed_flag = false;
 
 /* ===================== FUNCTION PROTOTYPES ==================== */
 
@@ -81,18 +81,24 @@ void debounceFSM_update(){
 	}
 }
 
+/**
+  * @brief Funcion para consultar el estado del pulsador.
+  * @param None
+  * @retval True --> El boton fue presionado.
+  *         False --> El boton no ha sido presionado.
+  */
+bool_t readKey(){
+	bool_t button_status = key_pressed_flag;
+
+	if (key_pressed_flag)
+		key_pressed_flag = false;
+
+	return button_status;
+}
+
 static void buttonPressed(){
-	button_pressed_flag = true;
+	key_pressed_flag = true;
 }
 
 static void buttonReleased(){
-}
-
-bool_t readKey(){
-	bool_t button_status = button_pressed_flag;
-
-	if (button_pressed_flag)
-		button_pressed_flag = false;
-
-	return button_status;
 }

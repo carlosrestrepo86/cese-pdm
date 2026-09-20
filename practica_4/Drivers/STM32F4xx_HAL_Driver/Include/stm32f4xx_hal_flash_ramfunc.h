@@ -26,7 +26,7 @@
     defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx)  
 
 /* Includes ------------------------------------------------------------------*/
-#include "../Include/stm32f4xx_hal_def.h"
+#include <stm32f4xx_hal_def.h>
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{

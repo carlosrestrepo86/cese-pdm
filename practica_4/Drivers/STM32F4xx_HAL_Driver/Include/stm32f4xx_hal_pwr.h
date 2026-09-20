@@ -24,7 +24,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../Include/stm32f4xx_hal_def.h"
+#include <stm32f4xx_hal_def.h>
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -269,7 +269,7 @@ typedef struct
   */
 
 /* Include PWR HAL Extension module */
-#include "../Include/stm32f4xx_hal_pwr_ex.h"
+#include <stm32f4xx_hal_pwr_ex.h>
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup PWR_Exported_Functions PWR Exported Functions
