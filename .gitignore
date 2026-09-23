@@ -51,5 +51,10 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# --- STM32CubeIDE Especificos ---
+Debug/
+Release/
+.settings/
+*.launch
 # debug information files
 *.dwo
