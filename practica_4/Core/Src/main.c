@@ -41,6 +41,7 @@ static void Error_Handler(void);
 
 int main(void)
 {
+	/* Variables para control del parpadeo */
 	static delay_t delay;
 	const uint32_t delay_times[] = {100, 500};
 
