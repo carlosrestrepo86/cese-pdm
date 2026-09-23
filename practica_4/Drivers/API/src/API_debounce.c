@@ -96,9 +96,19 @@ bool_t readKey(){
 	return button_status;
 }
 
+/**
+  * @brief Funcion que se llama cuando hay un cambio de estado alto a bajo.
+  * @param None
+  * @retval None
+  */
 static void buttonPressed(){
 	key_pressed_flag = true;
 }
 
+/**
+  * @brief Funcion que se llama cuando hay un cambio de estado bajo a alto.
+  * @param None
+  * @retval None
+  */
 static void buttonReleased(){
 }
