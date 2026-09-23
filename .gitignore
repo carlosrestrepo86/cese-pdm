@@ -57,4 +57,3 @@ dkms.conf
 # --- STM32CubeIDE Especificos ---
 Debug/
 Release/
-*.launch
