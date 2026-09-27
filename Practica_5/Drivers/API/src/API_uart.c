@@ -49,10 +49,11 @@ void uartSendString(uint8_t * pstring){
 
 	uint16_t size = getStringLength(pstring);
 
-	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
 		rx_tx_status = HAL_ERROR;
-
-	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	}else{
+		rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	}
 }
 
 /**
@@ -64,10 +65,11 @@ void uartSendString(uint8_t * pstring){
   */
 void uartSendStringSize(uint8_t * pstring, uint16_t size){
 
-	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
 		rx_tx_status = HAL_ERROR;
-
-	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	}else{
+		rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	}
 }
 
 /**
@@ -79,10 +81,11 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
   */
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 
-	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
-			rx_tx_status = HAL_ERROR;
-
-	rx_tx_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS);
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
+		rx_tx_status = HAL_ERROR;
+	}else{
+		rx_tx_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS); // cambio de UART_TIMEOUT_MS a 0, para no bloqueante y verificar con HAL_TIMEOUT
+	}
 }
 
 /**

@@ -11,6 +11,9 @@
 #define CMD_MAX_LINE 64  // incluye '\0'
 #define CMD_MAX_TOKENS 3 // COMANDO + máximo 2 argumentos
 
+#include "API_uart.h"
+#include "stm32f4xx_hal.h" // borrar
+
 typedef enum {
 	CMD_OK = 0,
 	CMD_ERR_OVERFLOW,

@@ -12,7 +12,7 @@
 #include "stm32f4xx_hal.h"
 #include <stdio.h>
 
-#define UART_TIMEOUT_MS 50 // 115200, 11.520 bytes por segundo = 1 byte cada 0.08 ms para 128 aprox 11 ms
+#define UART_TIMEOUT_MS 100 // 115200, 11.520 bytes por segundo = 1 byte cada 0.08 ms para 128 aprox 11 ms
 #define MAX_STRING_SIZE 256
 
 bool_t uartInit();

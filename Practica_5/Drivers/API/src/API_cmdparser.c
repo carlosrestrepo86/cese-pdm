@@ -5,7 +5,6 @@
  *      Author: c_and
  */
 #include "API_cmdparser.h"
-#include "API_uart.h"
 
 /* ========================== TYPEDEFS ========================== */
 
@@ -18,7 +17,10 @@ typedef enum{
 }parserState_t;
 
 static parserState_t current_state;
-static uint8_t data[16]; // 16 bytes
+static uint8_t byte;
+static uint8_t buffer[CMD_MAX_LINE];
+static uint8_t index = 0;
+static uint8_t parser_status;
 
 // Inicializa el módulo parser de comandos
 void cmdParserInit(void){
@@ -30,17 +32,24 @@ void cmdParserInit(void){
 void cmdPoll(void){
 	switch(current_state){
 		case CMD_IDLE:
-			uartReceiveStringSize(data, 1);
 
-			if ((data[0] != '\n') && (data[0] != '\r') && (data[0] != '\0'))
+			uartReceiveStringSize(&buffer[index], 1);
+
+			if ((buffer[index] != '\n') && (buffer[index] != '\r') && (buffer[index] != '\0')){
+//				buffer[index] = byte;
+				index++;
 				current_state = CMD_RECEIVING;
-
+			}
 			break;
 
 		case CMD_RECEIVING:
-			uartSendStringSize(data, 1);
+			uartReceiveStringSize(&buffer[index], 15);
+
+			current_state = CMD_PROCESS;
 			break;
+
 		case CMD_PROCESS:
+			uartSendStringSize(buffer, 16);
 			break;
 		case CMD_EXEC:
 			break;
