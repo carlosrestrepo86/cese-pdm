@@ -19,6 +19,7 @@
 
 #include "main.h"
 #include "API_uart.h"
+#include "API_cmdparser.h"
 
 /* ============================================================== */
 
@@ -44,16 +45,14 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	GPIO_Init();
-	uartInit(115200);
+	uartInit();
 
-	uint8_t text[] = "";
+	cmdParserInit();
 
 	while (1)
 	{
-		uartReceiveStringSize(text, 4);
-		HAL_Delay(50);
-		uartSendStringSize(text, 4);
-		HAL_Delay(50);
+		cmdPoll();
+		HAL_Delay(1000);
 	}
 }
 

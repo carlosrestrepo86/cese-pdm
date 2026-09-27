@@ -19,10 +19,10 @@ static uint16_t getStringLength(uint8_t * pstring);
   * @retval bool_t: False -> Si se presenta un error en la inicialización.
   *                 True  -> Puerto USART inicializado correctamente.
   */
-bool_t uartInit(uint32_t baudrate){
+bool_t uartInit(){
 
 	huart2.Instance = USART2;
-	huart2.Init.BaudRate = baudrate;
+	huart2.Init.BaudRate = 115200;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	huart2.Init.Parity = UART_PARITY_NONE;
@@ -33,8 +33,7 @@ bool_t uartInit(uint32_t baudrate){
 	{
 		return false;
 	}else{
-		uint8_t config[100];
-		snprintf(config, sizeof(config), "%s%", "Configuracion: ", baudrate);
+		uint8_t config[] = "115200,8n1\n\r";
 		uartSendString(config);
 		return true;
 	}
