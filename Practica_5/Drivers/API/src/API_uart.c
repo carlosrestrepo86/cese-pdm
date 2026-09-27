@@ -13,10 +13,16 @@ static uint8_t rx_tx_status;
 
 static uint16_t getStringLength(uint8_t * pstring);
 
-bool_t uartInit(){
+/**
+  * @brief Función para la inicialización del puerto USART.
+  * @param uint32_t baudrate: Velocidad de transmisión.
+  * @retval bool_t: False -> Si se presenta un error en la inicialización.
+  *                 True  -> Puerto USART inicializado correctamente.
+  */
+bool_t uartInit(uint32_t baudrate){
 
 	huart2.Instance = USART2;
-	huart2.Init.BaudRate = 115200;
+	huart2.Init.BaudRate = baudrate;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	huart2.Init.Parity = UART_PARITY_NONE;
@@ -27,12 +33,19 @@ bool_t uartInit(){
 	{
 		return false;
 	}else{
-		uint8_t config[] = "Configuración: 115200,8N1\n\r"; // \0 incluido implicitamente.
+		uint8_t config[100];
+		snprintf(config, sizeof(config), "%s%", "Configuracion: ", baudrate);
 		uartSendString(config);
 		return true;
 	}
 }
 
+/**
+  * @brief Función para enviar un string por el puerto USART
+  * sin conocer su tamaño.
+  * @param uint8_t * pstring: Puntero al primer elemento del array.
+  * @retval None.
+  */
 void uartSendString(uint8_t * pstring){
 
 	uint16_t size = getStringLength(pstring);
@@ -43,6 +56,13 @@ void uartSendString(uint8_t * pstring){
 	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
+/**
+  * @brief Función para enviar un string por el puerto USART
+  * conociendo su tamaño.
+  * @param uint8_t * pstring: Puntero al primer elemento del array.
+  * @param uint16_t size: Tamaño del texto.
+  * @retval None.
+  */
 void uartSendStringSize(uint8_t * pstring, uint16_t size){
 
 	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
@@ -51,6 +71,13 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
 	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
+/**
+  * @brief Función para recibir un string por el puerto USART
+  * conociendo su tamaño.
+  * @param uint8_t * pstring: Puntero para el array que almacenara  el string.
+  * @param uint16_t size: Tamaño del texto a recibir.
+  * @retval None.
+  */
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 
 	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
@@ -59,6 +86,12 @@ void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 	rx_tx_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
+/**
+  * @brief Función que recorre las posiciones de un array de texto hasta encontrar
+  * el caracter nulo (\n) y retorna su tamaño.
+  * @param uint8_t * pstring: Puntero al primer elemento del array.
+  * @retval uint16_t: Tamaño del array.
+  */
 static uint16_t getStringLength(uint8_t * pstring){
 
 	uint16_t size = 0;
@@ -71,6 +104,12 @@ static uint16_t getStringLength(uint8_t * pstring){
 	return size;
 }
 
+/**
+  * @brief Función que retorna el estado de la transmisión por USART
+  * HAL_OK, HAL_ERROR, HAL_BUSY o HAL_TIMEOUT.
+  * @param None.
+  * @retval uint8_t: Estado de la transmisión.
+  */
 uint8_t uartGetStatus(){
 	return rx_tx_status;
 }

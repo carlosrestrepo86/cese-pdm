@@ -44,7 +44,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	GPIO_Init();
-	uartInit();
+	uartInit(115200);
 
 	uint8_t text[] = "";
 
