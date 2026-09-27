@@ -18,6 +18,7 @@
 /* ========================== INCLUDES ========================== */
 
 #include "main.h"
+#include "API_uart.h"
 
 /* ============================================================== */
 
@@ -43,8 +44,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	GPIO_Init();
-//	USART2_UART_Init();
-
+	uartInit();
 
 	while (1)
 	{

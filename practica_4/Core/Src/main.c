@@ -62,6 +62,7 @@ int main(void)
 	while (1)
 	{
 		/* Actualizar la maquina de estados. */
+
 		debounceFSM_update();
 
 		/* Validar que el boton fue presionado para cambiar el tiempo del delay. */

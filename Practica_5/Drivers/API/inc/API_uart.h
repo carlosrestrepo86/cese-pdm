@@ -11,8 +11,8 @@
 #include "API_delay.h"
 #include "stm32f4xx_hal.h"
 
-#define UART_TIMEOUT_MS 100
-#define MAX_SIZE 255
+#define UART_TIMEOUT_MS 50 // 115200, 11.520 bytes por segundo = 1 byte cada 0.08 ms para 128 aprox 11 ms
+#define MAX_STRING_SIZE 256
 
 bool_t uartInit();
 void uartSendString(uint8_t * pstring);
