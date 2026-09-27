@@ -46,8 +46,14 @@ int main(void)
 	GPIO_Init();
 	uartInit();
 
+	uint8_t text[] = "";
+
 	while (1)
 	{
+		uartReceiveStringSize(text, 4);
+		HAL_Delay(50);
+		uartSendStringSize(text, 4);
+		HAL_Delay(50);
 	}
 }
 

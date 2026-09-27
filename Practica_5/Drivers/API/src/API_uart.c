@@ -9,8 +9,8 @@
 #include "API_delay.h"
 
 UART_HandleTypeDef huart2;
+static uint8_t rx_tx_status;
 
-static void UART_Handler(void);
 static uint16_t getStringLength(uint8_t * pstring);
 
 bool_t uartInit(){
@@ -34,65 +34,35 @@ bool_t uartInit(){
 }
 
 void uartSendString(uint8_t * pstring){
-	if (pstring == NULL)
-		UART_Handler();
 
 	uint16_t size = getStringLength(pstring);
 
-	if (size == 0 || size > 256)
-		UART_Handler();
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
+		rx_tx_status = HAL_ERROR;
 
-	HAL_StatusTypeDef status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
-
-	switch(status){
-		case HAL_OK:
-			break;
-		case HAL_ERROR:
-			UART_Handler();
-			break;
-		case HAL_BUSY:
-			// Falta -----------------
-			break;
-		case HAL_TIMEOUT:
-			// Falta -----------------
-			break;
-		default:
-			break;
-	}
+	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
 void uartSendStringSize(uint8_t * pstring, uint16_t size){
 
-	if (pstring == NULL || size == 0 || size > 256)
-		UART_Handler();
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
+		rx_tx_status = HAL_ERROR;
 
-	HAL_StatusTypeDef status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
-
-	switch(status){
-		case HAL_OK:
-			break;
-		case HAL_ERROR:
-			UART_Handler();
-			break;
-		case HAL_BUSY:
-			// Falta -----------------
-			break;
-		case HAL_TIMEOUT:
-			// Falta ----------------
-			break;
-		default:
-			break;
-	}
+	rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 
+	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE))
+			rx_tx_status = HAL_ERROR;
+
+	rx_tx_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS);
 }
 
 static uint16_t getStringLength(uint8_t * pstring){
 
 	uint16_t size = 0;
-	for (uint16_t i = 0; i < MAX_STRING_SIZE; i++){
+	for (uint8_t i = 0; i < MAX_STRING_SIZE; i++){
 		if (*(pstring + i) == '\0'){
 			size = i;
 			break;
@@ -101,9 +71,6 @@ static uint16_t getStringLength(uint8_t * pstring){
 	return size;
 }
 
-static void UART_Handler(void)
-{
-  while (1)
-  {
-  }
+uint8_t uartGetStatus(){
+	return rx_tx_status;
 }
