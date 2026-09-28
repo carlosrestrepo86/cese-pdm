@@ -58,13 +58,17 @@ void cmdPoll(void){
 
 		case CMD_RECEIVING:
 
-			while ((byte != '\n') && (byte != '\r')){
+			while ((byte != '\n') && (byte != '\r')){ // validar tamaño para salir de while sin fin de trama
 				uartReceiveStringSize(&byte, 1);
-				buffer[buffer_index] = byte;
-				buffer_index++;
+
+				if ((byte != '\n') && (byte != '\r')){
+					buffer[buffer_index] = byte;
+					buffer_index++;
+				}
 			}
 
-			buffer[buffer_index] = '\0';
+//			buffer[buffer_index] = '\0';
+//			buffer_index++;
 			current_state = CMD_PROCESS;
 			break;
 
@@ -83,6 +87,7 @@ void cmdPoll(void){
 				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
 			buffer_index = 0;
+			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
 			current_state = CMD_IDLE;
 			break;
 
@@ -94,14 +99,34 @@ void cmdPoll(void){
 }
 
 static void cmdProcessLine(void){
-	uartSendStringSize(buffer, 7);
-	if(strncmp((char*)buffer, "LED ON", 6) == 0){
-		action = CMD_LED_ON;
+
+	uint8_t *token[CMD_MAX_TOKENS];
+	uint8_t count = 1;
+	token[0] = buffer;
+
+	for (uint8_t i = 0; i < buffer_index; i++){
+		if (buffer[i] == ','){
+			buffer[i] = '\0';
+			token[count] = &buffer[i + 1];
+			count++;
+		}
 	}
 
-	if(strncmp((char*)buffer, "LED OFF", 7) == 0){
-		action = CMD_LED_OFF;
+//	uartSendString(token[0]);
+	uartSendString(token[1]);
+	if (strcmp((char *)token[0], "LED") == 0){
+		if(strcmp((char *)token[1], "ON") == 0)
+			action = CMD_LED_ON;
+		if(strcmp((char *)token[1], "OFF") == 0)
+			action = CMD_LED_OFF;
+		if(strcmp((char *)token[1], "TOGGLE") == 0)
+			action = CMD_LED_TOGGLE;
+	}else if (strcmp((char *)token[0], "STATUS") == 0){
+		action = CMD_LED_STATUS;
+	}else if (strcmp((char *)token[0], "HELP") == 0){
+		action = CMD_HELP;
 	}
+
 }
 
 // Imprime por USART la lista de comandos disponibles
