@@ -6,8 +6,7 @@
  */
 #include "API_cmdparser.h"
 
-/* ========================== TYPEDEFS ========================== */
-
+/* ============================================================== */
 typedef enum{
 	CMD_IDLE,
 	CMD_RECEIVING,
@@ -25,28 +24,40 @@ typedef enum
 	CMD_LED_STATUS,
 	CMD_HELP
 } cmd_action_t;
-
+/* ============================================================== */
 
 static cmd_state_t current_state;
 static cmd_action_t action = CMD_NONE;
+static cmd_status_t status = CMD_OK;
 static uint8_t buffer[CMD_MAX_LINE];
+
 uint8_t byte;
 uint8_t buffer_index = 0;
+/* ============================================================== */
 
-static bool_t cmdProcessLine(void);
+static void cmdProcessLine(void);
 
-// Inicializa el módulo parser de comandos
+/**
+  * @brief Función para inicializar la MEF.
+  * @param NONE.
+  * @retval NONE.
+  */
 void cmdParserInit(void){
 	current_state = CMD_IDLE;
 }
 
-// Maquina de estado del parser. Llamado periodicamente desde el bucle
-// procesa hasta 16 bytes por invocación (no bloqueante)
+/**
+  * @brief Función para actualizar la MEF.
+  * @param NONE.
+  * @retval NONE.
+  */
 void cmdPoll(void){
 
 	switch(current_state){
 		case CMD_IDLE:
 
+			/* Lectura de un byte para validar el inicio de la trama
+			 * Verificar que sea diferente de caracter fin de linea */
 			uartReceiveStringSize(&byte, 1);
 
 			if ((byte != '\n') && (byte != '\r') && (byte != '\0')){
@@ -58,6 +69,8 @@ void cmdPoll(void){
 
 		case CMD_RECEIVING:
 
+			/* Almacenar en el buffer los datos recibidos hasta
+			 * encontrar uno de los finales de linea */
 			uartReceiveStringSize(&byte, 1);
 
 			if ((byte != '\n') && (byte != '\r')){
@@ -67,32 +80,23 @@ void cmdPoll(void){
 				current_state = CMD_PROCESS;
 			}
 
-			if (buffer_index == CMD_MAX_LINE)
+			/* Verificar que no se supere la cantidad maxima de caracteres permitidos */
+			if (buffer_index == CMD_MAX_LINE){
+				status = CMD_ERR_OVERFLOW;
 				current_state = CMD_ERROR;
-
-			/*while ((byte != '\n') && (byte != '\r')){ // validar tamaño para salir de while sin fin de trama
-				uartReceiveStringSize(&byte, 1);
-
-				if ((byte != '\n') && (byte != '\r')){
-					buffer[buffer_index] = byte;
-					buffer_index++;
-				}
 			}
-
-			current_state = CMD_PROCESS;*/
 			break;
 
 		case CMD_PROCESS:
 
-			bool_t line_status;
+			/* Procesar la linea recibida y controlar si son comandos validos */
+			cmdProcessLine();
 
-			line_status = cmdProcessLine();
-
-			if (line_status)
+			if (status == CMD_OK)
 				current_state = CMD_EXEC;
-			else
+			else{
 				current_state = CMD_ERROR;
-
+			}
 			break;
 
 		case CMD_EXEC:
@@ -118,6 +122,7 @@ void cmdPoll(void){
 
 			buffer_index = 0;
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
+			action = CMD_NONE;
 			current_state = CMD_IDLE;
 			break;
 
@@ -126,6 +131,8 @@ void cmdPoll(void){
 			uartSendString((uint8_t*)"Error de comando\r\n");
 			buffer_index = 0;
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
+			action = CMD_NONE;
+			current_state = CMD_IDLE;
 			break;
 
 		default:
@@ -133,18 +140,31 @@ void cmdPoll(void){
 			cmdParserInit();
 			buffer_index = 0;
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
+			action = CMD_NONE;
 			break;
 	}
 }
 
-static bool_t cmdProcessLine(void){
+/**
+  * @brief Función para procesar una linea recibida por el USART.
+  * @param NONE.
+  * @retval bool_t: False -> Error en el comando o argumento.
+  *                 True  -> Comando y argumento validos.
+  */
+static void cmdProcessLine(void){
 
 	uint8_t *command = NULL;
 	uint8_t *argument = NULL;
-	bool_t line_status = false;
+
+	/* Ignorar lineas que inicien con # o / */
+	if ((buffer[0] == '#') || ((buffer[0] == '/') && (buffer[1] == '/'))){
+		status = CMD_ERR_SYNTAX;
+		return;
+	}
 
 	command = buffer;
 
+	/* Separa el comando del argumento para procesarlos independientemente. */
 	for (uint8_t i = 0; i < buffer_index; i++){
 		if (buffer[i] == ','){
 			buffer[i] = '\0';
@@ -153,39 +173,40 @@ static bool_t cmdProcessLine(void){
 		}
 	}
 
-	//	uartSendString(token[0]);
-	//	uartSendString(token[1]);
+	/* Verifica el comando recibido para guardar los parametros y leer en EXEC */
 	if (strcmp((char *)command, "LED") == 0){
 		if (argument != NULL){
 			if(strcmp((char *)argument, "ON") == 0){
 				action = CMD_LED_ON;
-				line_status = true;
-			}
-			if(strcmp((char *)argument, "OFF") == 0){
+				status = CMD_OK;
+			}else if(strcmp((char *)argument, "OFF") == 0){
 				action = CMD_LED_OFF;
-				line_status = true;
-			}
-			if(strcmp((char *)argument, "TOGGLE") == 0){
+				status = CMD_OK;
+			}else if(strcmp((char *)argument, "TOGGLE") == 0){
 				action = CMD_LED_TOGGLE;
-				line_status = true;
+				status = CMD_OK;
+			}else{
+				status = CMD_ERR_UNKNOWN;
 			}
+		}else{
+			status = CMD_ERR_SYNTAX;
 		}
-	}
-
-	if (strcmp((char *)command, "STATUS") == 0){
+	}else if (strcmp((char *)command, "STATUS") == 0){
 		action = CMD_LED_STATUS;
-		line_status = true;
-	}
-
-	if (strcmp((char *)command, "HELP") == 0){
+		status = CMD_OK;
+	} else if (strcmp((char *)command, "HELP") == 0){
 		action = CMD_HELP;
-		line_status = true;
+		status = CMD_OK;
+	} else{
+		status = CMD_ERR_UNKNOWN;
 	}
-
-	return line_status;
 }
 
-// Imprime por USART la lista de comandos disponibles
+/**
+  * @brief Función para enviar el menu de ayuda.
+  * @param NONE.
+  * @retval NONE.
+  */
 void cmdPrintHelp(void){
 	uartSendString((uint8_t*)"Comandos disponibles:\r\n");
 	uartSendString((uint8_t*)"LED,ON\r\n");

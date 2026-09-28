@@ -2,34 +2,36 @@
  * API_uart.c
  *
  *  Created on: 24/09/2026
- *      Author: c_and
+ *      Author:
  */
 
 #include "API_uart.h"
-#include "API_delay.h"
 
+/* ============================================================== */
 typedef enum
 {
     UART_OK,
-    UART_ERROR_PARAM,
     UART_ERROR_HAL,
-    UART_BUSY,
+	UART_ERROR_PARAM,
     UART_TIMEOUT
 
 } uart_status_t;
+/* ============================================================== */
 
 UART_HandleTypeDef huart2;
 static uart_status_t uart_status = UART_OK;
+/* ============================================================== */
 
 static uint16_t getStringLength(uint8_t * pstring);
+/* ============================================================== */
 
 /**
-  * @brief Función para la inicialización del puerto USART.
+  * @brief Función para la inicialización del puerto UART.
   * @param uint32_t baudrate: Velocidad de transmisión.
   * @retval bool_t: False -> Si se presenta un error en la inicialización.
   *                 True  -> Puerto USART inicializado correctamente.
   */
-bool_t uartInit(){
+bool_t uartInit(void){
 
 	huart2.Instance = USART2;
 	huart2.Init.BaudRate = 115200;
@@ -52,9 +54,8 @@ bool_t uartInit(){
 }
 
 /**
-  * @brief Función para enviar un string por el puerto USART
-  * sin conocer su tamaño.
-  * @param uint8_t * pstring: Puntero al primer elemento del array.
+  * @brief Función para enviar un string por el puerto USART sin conocer su tamaño.
+  * @param uint8_t * pstring: Puntero al primer elemento del buffer.
   * @retval None.
   */
 void uartSendString(uint8_t * pstring){
@@ -82,10 +83,6 @@ void uartSendString(uint8_t * pstring){
 			uart_status = UART_OK;
 			break;
 
-		case HAL_BUSY:
-			uart_status = UART_BUSY;
-			break;
-
 		case HAL_TIMEOUT:
 			uart_status = UART_TIMEOUT;
 			break;
@@ -97,9 +94,8 @@ void uartSendString(uint8_t * pstring){
 }
 
 /**
-  * @brief Función para enviar un string por el puerto USART
-  * conociendo su tamaño.
-  * @param uint8_t * pstring: Puntero al primer elemento del array.
+  * @brief Función para enviar un string por el puerto USART conociendo su tamaño.
+  * @param uint8_t * pstring: Puntero al primer elemento del buffer.
   * @param uint16_t size: Tamaño del texto.
   * @retval None.
   */
@@ -112,16 +108,12 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
 		return;
 	}
 
-	hal_status = uart_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	hal_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
 
 	switch (hal_status)
 	{
 		case HAL_OK:
 			uart_status = UART_OK;
-			break;
-
-		case HAL_BUSY:
-			uart_status = UART_BUSY;
 			break;
 
 		case HAL_TIMEOUT:
@@ -135,9 +127,8 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
 }
 
 /**
-  * @brief Función para recibir un string por el puerto USART
-  * conociendo su tamaño.
-  * @param uint8_t * pstring: Puntero para el array que almacenara  el string.
+  * @brief Función para recibir un string por el puerto USART conociendo su tamaño.
+  * @param uint8_t * pstring: Puntero para el buffer que almacenara  el string.
   * @param uint16_t size: Tamaño del texto a recibir.
   * @retval None.
   */
@@ -150,16 +141,12 @@ void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 		return;
 	}
 
-	hal_status = uart_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS); // cambio de UART_TIMEOUT_MS a 0, para no bloqueante y verificar con HAL_TIMEOUT
+	hal_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS); // cambio de UART_TIMEOUT_MS a 0, para no bloqueante y verificar con HAL_TIMEOUT
 
 	switch (hal_status)
 	{
 		case HAL_OK:
 			uart_status = UART_OK;
-			break;
-
-		case HAL_BUSY:
-			uart_status = UART_BUSY;
 			break;
 
 		case HAL_TIMEOUT:
@@ -175,8 +162,8 @@ void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 /**
   * @brief Función que recorre las posiciones de un array de texto hasta encontrar
   * el caracter nulo (\n) y retorna su tamaño.
-  * @param uint8_t * pstring: Puntero al primer elemento del array.
-  * @retval uint16_t: Tamaño del array.
+  * @param uint8_t * pstring: Puntero al primer elemento del buffer.
+  * @retval uint16_t: Tamaño del buffer.
   */
 static uint16_t getStringLength(uint8_t * pstring){
 
@@ -192,14 +179,22 @@ static uint16_t getStringLength(uint8_t * pstring){
 
 /**
   * @brief Función que retorna el estado de la transmisión por USART
-  * HAL_OK, HAL_ERROR, HAL_BUSY o HAL_TIMEOUT.
+  * UART_OK, UART_ERROR_HAL, UART_ERROR_PARAM o UART_TIMEOUT.
   * @param None.
   * @retval uint8_t: Estado de la transmisión.
   */
-uint8_t uartGetStatus(){
+uint8_t uartGetStatus(void){
 	return uart_status;
 }
 
+/**
+  * @brief Función que retorna el estado de un pin.
+  * @param GPIO_TypeDef* port: Puerto.
+  * @param uint16_t pin: Pin.
+  * @retval bool_t: Estado del pin.
+  * 		true -> Pin en 1.
+  * 		false -> Pin en 0.
+  */
 bool_t uartGetPinState(GPIO_TypeDef* port, uint16_t pin){
 
 	bool_t pin_state;
