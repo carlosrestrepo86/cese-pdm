@@ -12,7 +12,8 @@
 #define CMD_MAX_TOKENS 3 // COMANDO + máximo 2 argumentos
 
 #include "API_uart.h"
-#include "stm32f4xx_hal.h" // borrar
+#include "main.h" // borrar
+#include <string.h>
 
 typedef enum {
 	CMD_OK = 0,
