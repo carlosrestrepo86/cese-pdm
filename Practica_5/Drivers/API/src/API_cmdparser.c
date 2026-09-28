@@ -14,6 +14,24 @@ typedef enum{
 	CMD_EXEC,
 	CMD_ERROR
 }cmd_state_t;
+
+typedef struct
+{
+    const char *command;
+    const char *argument;
+    cmd_action_t action;
+} cmd_command_t;
+
+static const cmd_command_t commands[] =
+{
+		{"LED", "ON",     CMD_LED_ON},
+		{"LED", "OFF",    CMD_LED_OFF},
+		{"LED", "TOGGLE", CMD_LED_TOGGLE},
+		{"", "STATUS",    CMD_LED_STATUS},
+		{"", "HELP",      CMD_HELP},
+		{"", "BAUD?",     CMD_GET_BAUD}
+};
+
 /* ============================================================== */
 
 static cmd_state_t current_state;
@@ -161,15 +179,15 @@ static void cmdProcessLine(void){
 	}
 
 	/* Verifica el comando recibido para guardar los parametros y leer en EXEC */
-	if (strcmp((char *)command, "LED") == 0){
+	if (strcmp((char *)command, commands[0].command) == 0){
 		if (argument != NULL){
-			if(strcmp((char *)argument, "ON") == 0){
+			if(strcmp((char *)argument, commands[0].argument) == 0){
 				pending_action = CMD_LED_ON;
 				status = CMD_OK;
-			}else if(strcmp((char *)argument, "OFF") == 0){
+			}else if(strcmp((char *)argument, commands[1].argument) == 0){
 				pending_action = CMD_LED_OFF;
 				status = CMD_OK;
-			}else if(strcmp((char *)argument, "TOGGLE") == 0){
+			}else if(strcmp((char *)argument, commands[2].argument) == 0){
 				pending_action = CMD_LED_TOGGLE;
 				status = CMD_OK;
 			}else{
@@ -178,13 +196,13 @@ static void cmdProcessLine(void){
 		}else{
 			status = CMD_ERR_SYNTAX;
 		}
-	}else if (strcmp((char *)command, "STATUS") == 0){
+	}else if (strcmp((char *)command, commands[3].argument) == 0){
 		pending_action = CMD_LED_STATUS;
 		status = CMD_OK;
-	} else if (strcmp((char *)command, "HELP") == 0){
+	} else if (strcmp((char *)command, commands[4].argument) == 0){
 		pending_action = CMD_HELP;
 		status = CMD_OK;
-	} else if (strcmp((char *)command, "BAUD") == 0){
+	} else if (strcmp((char *)command, commands[5].argument) == 0){
 		pending_action = CMD_GET_BAUD;
 		status = CMD_OK;
 	} else{
@@ -203,8 +221,7 @@ void cmdPrintHelp(void){
 	uartSendString((uint8_t*)"LED OFF\r\n");
 	uartSendString((uint8_t*)"LED TOGGLE\r\n");
 	uartSendString((uint8_t*)"STATUS\r\n");
-	uartSendString((uint8_t*)"BAUD\r\n");
-	uartSendString((uint8_t*)"BAUD=xxxxx\r\n");
+	uartSendString((uint8_t*)"BAUD?\r\n");
 }
 
 /**

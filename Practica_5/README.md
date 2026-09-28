@@ -51,15 +51,17 @@ El número de puerto COM depende del equipo y de la conexión de la placa.
 - Abrir el puerto serial.
 - Escribir uno de los comandos disponibles y enviarlo utilizando la terminación de línea configurada.
 - Ejemplos
-    - LED ON\n\r Encender led (obligatorio agregar \r o \n).
+    - LED ON\n\r     Encender led (obligatorio agregar \r o \n).
 
-    - LED OFF\n\r Apagar led (obligatorio agregar \r o \n).
+    - LED OFF\n\r    Apagar led (obligatorio agregar \r o \n).
 
     - LED TOGGLE\n\r Cambiar el estado del led (obligatorio agregar \r o \n).
 
-    - STATUS\n\r Consulta el estado del LED.
+    - STATUS\n\r     Consulta el estado del LED.
 
-    - HELP\n\r Muestra los comandos disponibles.
+    - HELP\n\r       Muestra los comandos disponibles.
+    
+    - BAUD?\n\r      Retorna la tasa de baudios configurada.
 
 
 ## Requisitos de Hardware y Software
