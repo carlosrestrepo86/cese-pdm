@@ -128,7 +128,15 @@ void cmdPoll(void){
 
 		case CMD_ERROR:
 
-			uartSendString((uint8_t*)"Error de comando\r\n");
+			if (status == CMD_ERR_OVERFLOW)
+				uartSendString((uint8_t*)"Line too long\r\n");
+
+			if (status == CMD_ERR_UNKNOWN)
+				uartSendString((uint8_t*)"Unknown command\r\n");
+
+			if (status == CMD_ERR_SYNTAX)
+				uartSendString((uint8_t*)"Bad arguments\r\n");
+
 			buffer_index = 0;
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
 			action = CMD_NONE;
@@ -158,7 +166,7 @@ static void cmdProcessLine(void){
 
 	/* Ignorar lineas que inicien con # o / */
 	if ((buffer[0] == '#') || ((buffer[0] == '/') && (buffer[1] == '/'))){
-		status = CMD_ERR_SYNTAX;
+		status = CMD_ERR_FLAG;
 		return;
 	}
 
@@ -166,7 +174,7 @@ static void cmdProcessLine(void){
 
 	/* Separa el comando del argumento para procesarlos independientemente. */
 	for (uint8_t i = 0; i < buffer_index; i++){
-		if (buffer[i] == ','){
+		if (buffer[i] == ' '){
 			buffer[i] = '\0';
 			argument = &buffer[i + 1];
 			break;
@@ -186,7 +194,7 @@ static void cmdProcessLine(void){
 				action = CMD_LED_TOGGLE;
 				status = CMD_OK;
 			}else{
-				status = CMD_ERR_UNKNOWN;
+				status = CMD_ERR_SYNTAX;
 			}
 		}else{
 			status = CMD_ERR_SYNTAX;
@@ -209,8 +217,8 @@ static void cmdProcessLine(void){
   */
 void cmdPrintHelp(void){
 	uartSendString((uint8_t*)"Comandos disponibles:\r\n");
-	uartSendString((uint8_t*)"LED,ON\r\n");
-	uartSendString((uint8_t*)"LED,OFF\r\n");
-	uartSendString((uint8_t*)"LED,TOGGLE\r\n");
+	uartSendString((uint8_t*)"LED ON\r\n");
+	uartSendString((uint8_t*)"LED OFF\r\n");
+	uartSendString((uint8_t*)"LED TOGGLE\r\n");
 	uartSendString((uint8_t*)"STATUS\r\n");
 }
