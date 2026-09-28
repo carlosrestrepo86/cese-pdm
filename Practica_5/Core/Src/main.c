@@ -29,6 +29,7 @@ static void GPIO_Init(void);
 int main(void)
 {
 	cmd_action_t pending_action = CMD_NONE;
+    const uint32_t baudrate = 115200;
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
@@ -38,7 +39,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	GPIO_Init();
-	uartInit();
+	uartInit(baudrate);
 
 	cmdParserInit();
 
@@ -70,6 +71,12 @@ int main(void)
 
 			if (pending_action == CMD_HELP)
 				cmdPrintHelp();
+
+			if (pending_action == CMD_GET_BAUD){
+				char buffer[10];
+				snprintf(buffer, sizeof(buffer), "%"PRIu32"\n\r", baudrate);
+				uartSendString((uint8_t*)buffer);
+			}
 		}
 	}
 }

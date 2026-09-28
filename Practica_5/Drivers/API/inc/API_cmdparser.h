@@ -30,6 +30,8 @@ typedef enum
     CMD_LED_OFF,
     CMD_LED_TOGGLE,
 	CMD_LED_STATUS,
+	CMD_GET_BAUD,
+	CMD_SET_BAUD,
 	CMD_HELP
 } cmd_action_t;
 

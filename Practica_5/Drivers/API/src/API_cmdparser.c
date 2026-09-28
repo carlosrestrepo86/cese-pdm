@@ -153,7 +153,7 @@ static void cmdProcessLine(void){
 
 	/* Separa el comando del argumento para procesarlos independientemente. */
 	for (uint8_t i = 0; i < buffer_index; i++){
-		if (buffer[i] == ' '){
+		if (buffer[i] == ' ' || buffer[i] == '='){
 			buffer[i] = '\0';
 			argument = &buffer[i + 1];
 			break;
@@ -184,6 +184,9 @@ static void cmdProcessLine(void){
 	} else if (strcmp((char *)command, "HELP") == 0){
 		pending_action = CMD_HELP;
 		status = CMD_OK;
+	} else if (strcmp((char *)command, "BAUD") == 0){
+		pending_action = CMD_GET_BAUD;
+		status = CMD_OK;
 	} else{
 		status = CMD_ERR_UNKNOWN;
 	}
@@ -200,6 +203,8 @@ void cmdPrintHelp(void){
 	uartSendString((uint8_t*)"LED OFF\r\n");
 	uartSendString((uint8_t*)"LED TOGGLE\r\n");
 	uartSendString((uint8_t*)"STATUS\r\n");
+	uartSendString((uint8_t*)"BAUD\r\n");
+	uartSendString((uint8_t*)"BAUD=xxxxx\r\n");
 }
 
 /**
