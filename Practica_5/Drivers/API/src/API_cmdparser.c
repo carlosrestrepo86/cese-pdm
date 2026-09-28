@@ -14,20 +14,10 @@ typedef enum{
 	CMD_EXEC,
 	CMD_ERROR
 }cmd_state_t;
-
-typedef enum
-{
-    CMD_NONE,
-	CMD_LED_ON,
-    CMD_LED_OFF,
-    CMD_LED_TOGGLE,
-	CMD_LED_STATUS,
-	CMD_HELP
-} cmd_action_t;
 /* ============================================================== */
 
 static cmd_state_t current_state;
-static cmd_action_t action = CMD_NONE;
+static cmd_action_t pending_action = CMD_NONE;
 static cmd_status_t status = CMD_OK;
 static uint8_t buffer[CMD_MAX_LINE];
 
@@ -36,6 +26,7 @@ uint8_t buffer_index = 0;
 /* ============================================================== */
 
 static void cmdProcessLine(void);
+static void setCommand(cmd_action_t action);
 
 /**
   * @brief Función para inicializar la MEF.
@@ -57,7 +48,8 @@ void cmdPoll(void){
 		case CMD_IDLE:
 
 			/* Lectura de un byte para validar el inicio de la trama
-			 * Verificar que sea diferente de caracter fin de linea */
+			 * Verificar que sea diferente de caracter fin de linea
+			 * Pasa al siguiente estado al recibir un caracter valido */
 			uartReceiveStringSize(&byte, 1);
 
 			if ((byte != '\n') && (byte != '\r') && (byte != '\0')){
@@ -70,7 +62,8 @@ void cmdPoll(void){
 		case CMD_RECEIVING:
 
 			/* Almacenar en el buffer los datos recibidos hasta
-			 * encontrar uno de los finales de linea */
+			 * encontrar uno de los finales de linea
+			 * Pasa al siguiente esta al recibir '\n' o '\r'*/
 			uartReceiveStringSize(&byte, 1);
 
 			if ((byte != '\n') && (byte != '\r')){
@@ -89,7 +82,8 @@ void cmdPoll(void){
 
 		case CMD_PROCESS:
 
-			/* Procesar la linea recibida y controlar si son comandos validos */
+			/* Procesar la linea recibida y controlar si son comandos validos
+			 * Pasa al siguiente estado al terminar de tokenizar la linea*/
 			cmdProcessLine();
 
 			if (status == CMD_OK)
@@ -101,33 +95,18 @@ void cmdPoll(void){
 
 		case CMD_EXEC:
 
-			if (action == CMD_LED_ON)
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+			/* Establece la accion que esta pendiente por ejecutar y
+			 * pasa al siguiente estado */
+			setCommand(pending_action);
 
-			if (action == CMD_LED_OFF)
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-
-			if (action == CMD_LED_TOGGLE)
-				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-
-			if (action == CMD_LED_STATUS){
-				if (uartGetPinState(LD2_GPIO_Port, LD2_Pin))
-					uartSendString((uint8_t*)"LED is ON\r\n");
-				else
-					uartSendString((uint8_t*)"LED is OFF\r\n");
-			}
-
-			if (action == CMD_HELP)
-				cmdPrintHelp();
-
-			buffer_index = 0;
-			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
-			action = CMD_NONE;
+			buffer_index = 0;                  // Reiniciar el contador utilizado para guardar en el buffer.
+			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer para la proxima linea.
 			current_state = CMD_IDLE;
 			break;
 
 		case CMD_ERROR:
 
+			/* Envio de los mensajes de error y pasar al estado inicial */
 			if (status == CMD_ERR_OVERFLOW)
 				uartSendString((uint8_t*)"Line too long\r\n");
 
@@ -137,18 +116,18 @@ void cmdPoll(void){
 			if (status == CMD_ERR_SYNTAX)
 				uartSendString((uint8_t*)"Bad arguments\r\n");
 
-			buffer_index = 0;
-			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
-			action = CMD_NONE;
+			buffer_index = 0;                  // Reiniciar el contador utilizado para guardar en el buffer.
+			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer para la proxima linea.
+			pending_action = CMD_NONE;
 			current_state = CMD_IDLE;
 			break;
 
 		default:
 
 			cmdParserInit();
-			buffer_index = 0;
-			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer.
-			action = CMD_NONE;
+			buffer_index = 0;                  // Reiniciar el contador utilizado para guardar en el buffer.
+			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer para la proxima linea.
+			pending_action = CMD_NONE;
 			break;
 	}
 }
@@ -185,13 +164,13 @@ static void cmdProcessLine(void){
 	if (strcmp((char *)command, "LED") == 0){
 		if (argument != NULL){
 			if(strcmp((char *)argument, "ON") == 0){
-				action = CMD_LED_ON;
+				pending_action = CMD_LED_ON;
 				status = CMD_OK;
 			}else if(strcmp((char *)argument, "OFF") == 0){
-				action = CMD_LED_OFF;
+				pending_action = CMD_LED_OFF;
 				status = CMD_OK;
 			}else if(strcmp((char *)argument, "TOGGLE") == 0){
-				action = CMD_LED_TOGGLE;
+				pending_action = CMD_LED_TOGGLE;
 				status = CMD_OK;
 			}else{
 				status = CMD_ERR_SYNTAX;
@@ -200,10 +179,10 @@ static void cmdProcessLine(void){
 			status = CMD_ERR_SYNTAX;
 		}
 	}else if (strcmp((char *)command, "STATUS") == 0){
-		action = CMD_LED_STATUS;
+		pending_action = CMD_LED_STATUS;
 		status = CMD_OK;
 	} else if (strcmp((char *)command, "HELP") == 0){
-		action = CMD_HELP;
+		pending_action = CMD_HELP;
 		status = CMD_OK;
 	} else{
 		status = CMD_ERR_UNKNOWN;
@@ -221,4 +200,25 @@ void cmdPrintHelp(void){
 	uartSendString((uint8_t*)"LED OFF\r\n");
 	uartSendString((uint8_t*)"LED TOGGLE\r\n");
 	uartSendString((uint8_t*)"STATUS\r\n");
+}
+
+/**
+  * @brief Funcion para que asigna la acción procesa para ser leida en el main.
+  * @param cmd_action_t action: Comando para ejecutar.
+  * @retval None
+  */
+static void setCommand(cmd_action_t action){
+    pending_action = action;
+}
+
+/**
+  * @brief Funcion para consultar el comando que esta en espera.
+  * @retval cmd_action_t: Comando que esta disponible para ejecutar.
+  */
+cmd_action_t readCommand(){
+
+	cmd_action_t command = pending_action;
+	pending_action = CMD_NONE;
+
+	return command;
 }

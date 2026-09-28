@@ -15,28 +15,21 @@
   ******************************************************************************
   */
 
-/* ========================== INCLUDES ========================== */
-
 #include "main.h"
 #include "API_uart.h"
 #include "API_cmdparser.h"
 
 /* ============================================================== */
 
-/* ========================== VARIABLES ========================= */
-
-/* ============================================================== */
-
-/* ===================== FUNCTION PROTOTYPES ==================== */
-
 void SystemClock_Config(void);
 static void GPIO_Init(void);
-//static void USART2_UART_Init(void);
 
 /* ============================================================== */
 
 int main(void)
 {
+	cmd_action_t pending_action = CMD_NONE;
+
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 
@@ -49,9 +42,35 @@ int main(void)
 
 	cmdParserInit();
 
+
 	while (1)
 	{
 		cmdPoll();
+
+		/* Verifica si hay una accion pendiente y la ejecuta */
+		pending_action = readCommand();
+
+		if (pending_action != CMD_NONE){
+
+			if (pending_action == CMD_LED_ON)
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
+			if (pending_action == CMD_LED_OFF)
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+
+			if (pending_action == CMD_LED_TOGGLE)
+				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+			if (pending_action == CMD_LED_STATUS){
+				if (uartGetPinState(LD2_GPIO_Port, LD2_Pin))
+					uartSendString((uint8_t*)"LED is ON\r\n");
+				else
+					uartSendString((uint8_t*)"LED is OFF\r\n");
+			}
+
+			if (pending_action == CMD_HELP)
+				cmdPrintHelp();
+		}
 	}
 }
 
