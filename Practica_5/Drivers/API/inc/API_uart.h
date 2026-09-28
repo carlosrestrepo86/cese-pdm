@@ -20,5 +20,6 @@ void uartSendString(uint8_t * pstring);
 void uartSendStringSize(uint8_t * pstring, uint16_t size);
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size);
 uint8_t uartGetStatus();
+bool_t uartGetPinState(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 #endif /* DRIVERS_API_INC_API_UART_H_ */

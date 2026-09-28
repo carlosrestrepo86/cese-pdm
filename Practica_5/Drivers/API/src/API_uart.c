@@ -8,8 +8,18 @@
 #include "API_uart.h"
 #include "API_delay.h"
 
+typedef enum
+{
+    UART_OK,
+    UART_ERROR_PARAM,
+    UART_ERROR_HAL,
+    UART_BUSY,
+    UART_TIMEOUT
+
+} uart_status_t;
+
 UART_HandleTypeDef huart2;
-static uint8_t rx_tx_status;
+static uart_status_t uart_status = UART_OK;
 
 static uint16_t getStringLength(uint8_t * pstring);
 
@@ -33,8 +43,10 @@ bool_t uartInit(){
 	{
 		return false;
 	}else{
-		uint8_t config[] = "115200,8n1\n\r";
-		uartSendString(config);
+		uartSendString((uint8_t*)"Puerto:\n\r");
+		uartSendString((uint8_t*)"Baudrate: 115200\n\r");
+		uartSendString((uint8_t*)"Parity: NONE\n\r");
+		uartSendString((uint8_t*)"Stop bits: 1\n\r");
 		return true;
 	}
 }
@@ -47,12 +59,40 @@ bool_t uartInit(){
   */
 void uartSendString(uint8_t * pstring){
 
-	uint16_t size = getStringLength(pstring);
+	uint16_t size;
+	HAL_StatusTypeDef hal_status;
 
-	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
-		rx_tx_status = HAL_ERROR;
-	}else{
-		rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+	if (pstring == NULL){
+		uart_status = UART_ERROR_PARAM;
+		return;
+	}
+
+	size = getStringLength(pstring);
+
+	if ((size == 0U) || (size > MAX_STRING_SIZE)){
+		uart_status = UART_ERROR_PARAM;
+		return;
+	}
+
+	hal_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+
+	switch (hal_status)
+	{
+		case HAL_OK:
+			uart_status = UART_OK;
+			break;
+
+		case HAL_BUSY:
+			uart_status = UART_BUSY;
+			break;
+
+		case HAL_TIMEOUT:
+			uart_status = UART_TIMEOUT;
+			break;
+
+		default:
+			uart_status = UART_ERROR_HAL;
+			break;
 	}
 }
 
@@ -65,10 +105,32 @@ void uartSendString(uint8_t * pstring){
   */
 void uartSendStringSize(uint8_t * pstring, uint16_t size){
 
+	HAL_StatusTypeDef hal_status;
+
 	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
-		rx_tx_status = HAL_ERROR;
-	}else{
-		rx_tx_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+		uart_status = UART_ERROR_PARAM;
+		return;
+	}
+
+	hal_status = uart_status = HAL_UART_Transmit(&huart2, pstring, size, UART_TIMEOUT_MS);
+
+	switch (hal_status)
+	{
+		case HAL_OK:
+			uart_status = UART_OK;
+			break;
+
+		case HAL_BUSY:
+			uart_status = UART_BUSY;
+			break;
+
+		case HAL_TIMEOUT:
+			uart_status = UART_TIMEOUT;
+			break;
+
+		default:
+			uart_status = UART_ERROR_HAL;
+			break;
 	}
 }
 
@@ -81,10 +143,32 @@ void uartSendStringSize(uint8_t * pstring, uint16_t size){
   */
 void uartReceiveStringSize(uint8_t * pstring, uint16_t size){
 
+	HAL_StatusTypeDef hal_status;
+
 	if ((pstring == NULL) || (size == 0U) || (size > MAX_STRING_SIZE)){
-		rx_tx_status = HAL_ERROR;
-	}else{
-		rx_tx_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS); // cambio de UART_TIMEOUT_MS a 0, para no bloqueante y verificar con HAL_TIMEOUT
+		uart_status = UART_ERROR_PARAM;
+		return;
+	}
+
+	hal_status = uart_status = HAL_UART_Receive(&huart2, pstring, size, UART_TIMEOUT_MS); // cambio de UART_TIMEOUT_MS a 0, para no bloqueante y verificar con HAL_TIMEOUT
+
+	switch (hal_status)
+	{
+		case HAL_OK:
+			uart_status = UART_OK;
+			break;
+
+		case HAL_BUSY:
+			uart_status = UART_BUSY;
+			break;
+
+		case HAL_TIMEOUT:
+			uart_status = UART_TIMEOUT;
+			break;
+
+		default:
+			uart_status = UART_ERROR_HAL;
+			break;
 	}
 }
 
@@ -113,5 +197,14 @@ static uint16_t getStringLength(uint8_t * pstring){
   * @retval uint8_t: Estado de la transmisión.
   */
 uint8_t uartGetStatus(){
-	return rx_tx_status;
+	return uart_status;
+}
+
+bool_t uartGetPinState(GPIO_TypeDef* port, uint16_t pin){
+
+	bool_t pin_state;
+
+	pin_state = HAL_GPIO_ReadPin(port, pin);
+
+	return pin_state;
 }
