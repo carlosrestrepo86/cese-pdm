@@ -8,18 +8,9 @@
 #include "API_uart.h"
 
 /* ============================================================== */
-typedef enum
-{
-    UART_OK,
-    UART_ERROR_HAL,
-	UART_ERROR_PARAM,
-    UART_TIMEOUT
 
-} uart_status_t;
-/* ============================================================== */
-
-UART_HandleTypeDef huart2;
-static uart_status_t uart_status = UART_OK;
+static UART_HandleTypeDef huart2;
+static uart_status_t uart_status = UART_NONE;
 /* ============================================================== */
 
 static uint16_t getStringLength(uint8_t * pstring);
@@ -183,10 +174,13 @@ static uint16_t getStringLength(uint8_t * pstring){
   * @brief Función que retorna el estado de la transmisión por USART
   * UART_OK, UART_ERROR_HAL, UART_ERROR_PARAM o UART_TIMEOUT.
   * @param None.
-  * @retval uint8_t: Estado de la transmisión.
+  * @retval uart_status_t: Estado de la transmisión.
   */
-uint8_t uartGetStatus(void){
-	return uart_status;
+uart_status_t uartGetStatus(void){
+	uart_status_t state = uart_status;
+	uart_status = UART_NONE;
+
+	return state;
 }
 
 /**

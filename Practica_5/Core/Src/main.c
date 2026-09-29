@@ -73,8 +73,8 @@ int main(void)
 				cmdPrintHelp();
 
 			if (pending_action == CMD_GET_BAUD){
-				char buffer[10];
-				snprintf(buffer, sizeof(buffer), "%"PRIu32"\n\r", baudrate);
+				char buffer[20];
+				snprintf(buffer, sizeof(buffer), "Baudrate: %"PRIu32"\n\r", baudrate);
 				uartSendString((uint8_t*)buffer);
 			}
 		}

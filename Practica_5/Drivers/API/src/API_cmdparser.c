@@ -70,6 +70,11 @@ void cmdPoll(void){
 			 * Pasa al siguiente estado al recibir un caracter valido */
 			uartReceiveStringSize(&byte, 1);
 
+			/* Controlar el retorno de la funcion HAL_UART_Receive
+			 * y descartar el dato si hubo error en la lectura */
+			if (uartGetStatus() != UART_OK)
+				break;
+
 			if ((byte != '\n') && (byte != '\r') && (byte != '\0')){
 				buffer[buffer_index] = byte;
 				buffer_index++;
@@ -83,6 +88,12 @@ void cmdPoll(void){
 			 * encontrar uno de los finales de linea
 			 * Pasa al siguiente esta al recibir '\n' o '\r'*/
 			uartReceiveStringSize(&byte, 1);
+
+			/* Controlar el retorno de la funcion HAL_UART_Receive
+			 * y descartar la linea */
+			if (uartGetStatus() != UART_OK){
+				current_state = CMD_ERROR;
+			}
 
 			if ((byte != '\n') && (byte != '\r')){
 				buffer[buffer_index] = byte;
