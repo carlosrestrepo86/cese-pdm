@@ -15,6 +15,14 @@ typedef enum{
 	CMD_ERROR
 }cmd_state_t;
 
+typedef enum {
+	CMD_OK = 0,
+	CMD_ERR_OVERFLOW,
+	CMD_ERR_SYNTAX,
+	CMD_ERR_UNKNOWN,
+	CMD_ERR_FLAG
+}cmd_status_t;
+
 typedef struct
 {
     const char *command;
@@ -31,9 +39,9 @@ static const cmd_command_t commands[] =
 		{"", "HELP",      CMD_HELP},
 		{"", "BAUD?",     CMD_GET_BAUD}
 };
-
 /* ============================================================== */
 
+/* ============================================================== */
 static cmd_state_t current_state;
 static cmd_action_t pending_action = CMD_NONE;
 static cmd_status_t status = CMD_OK;
@@ -43,6 +51,7 @@ static uint8_t byte;
 static uint8_t buffer_index = 0;
 /* ============================================================== */
 
+/* ============================================================== */
 static void cmdProcessLine(void);
 static void setCommand(cmd_action_t action);
 static void toUpperCase(uint8_t *pchar);

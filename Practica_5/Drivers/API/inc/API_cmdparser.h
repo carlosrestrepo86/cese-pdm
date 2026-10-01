@@ -15,14 +15,6 @@
 #include "API_uart.h"
 #include "main.h"
 
-typedef enum {
-	CMD_OK = 0,
-	CMD_ERR_OVERFLOW,
-	CMD_ERR_SYNTAX,
-	CMD_ERR_UNKNOWN,
-	CMD_ERR_FLAG
-}cmd_status_t;
-
 typedef enum
 {
     CMD_NONE,
