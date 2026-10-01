@@ -37,14 +37,15 @@ static const cmd_command_t commands[] =
 static cmd_state_t current_state;
 static cmd_action_t pending_action = CMD_NONE;
 static cmd_status_t status = CMD_OK;
-static uint8_t buffer[CMD_MAX_LINE];
 
-uint8_t byte;
-uint8_t buffer_index = 0;
+static uint8_t buffer[CMD_MAX_LINE];
+static uint8_t byte;
+static uint8_t buffer_index = 0;
 /* ============================================================== */
 
 static void cmdProcessLine(void);
 static void setCommand(cmd_action_t action);
+static void toUpperCase(uint8_t *pchar);
 
 /**
   * @brief Función para inicializar la MEF.
@@ -70,6 +71,9 @@ void cmdPoll(void){
 			 * Pasa al siguiente estado al recibir un caracter valido */
 			uartReceiveStringSize(&byte, 1);
 
+			/* Si la letra es minuscula se pasa a mayuscula */
+			toUpperCase(&byte);
+
 			/* Controlar el retorno de la funcion HAL_UART_Receive
 			 * y descartar el dato si hubo error en la lectura */
 			if (uartGetStatus() != UART_OK)
@@ -88,6 +92,9 @@ void cmdPoll(void){
 			 * encontrar uno de los finales de linea
 			 * Pasa al siguiente esta al recibir '\n' o '\r'*/
 			uartReceiveStringSize(&byte, 1);
+
+			/* Si la letra es minuscula se pasa a mayuscula */
+			toUpperCase(&byte);
 
 			/* Controlar el retorno de la funcion HAL_UART_Receive
 			 * y descartar la linea */
@@ -254,4 +261,20 @@ cmd_action_t readCommand(){
 	pending_action = CMD_NONE;
 
 	return command;
+}
+
+/**
+  * @brief Funcion para pasar las letras minusculas a mayusculas.
+  * @param uint8_t *pchar: Puntero al caracter.
+  * @retval Si el caracter esta en minuscula se realiza la conversion a mayuscula.
+  */
+static void toUpperCase(uint8_t *pchar){
+
+	if (pchar == NULL){
+		return;
+	}
+
+	if (*pchar >= 97 && *pchar <= 122){
+		*pchar -= 32;
+	}
 }
