@@ -52,7 +52,7 @@ void LCD_Config(void){
 	LCD_delay(2);
 	send_8_bits(0x06, COMMAND); // Incrementar cursor
 	LCD_delay(2);
-	send_8_bits(0x0E, COMMAND); // Display ON + Cursor ON
+	send_8_bits(0x0C, COMMAND); // Display ON + Cursor OFF
 	LCD_delay(2);
 	send_8_bits(0x01, COMMAND); // Clear display.
 	LCD_delay(2);
@@ -127,6 +127,51 @@ void LCD_Clear(void){
   */
 void LCD_Home(void){
 	send_8_bits(0x02, COMMAND); // Return home
+}
+
+/**
+  * @brief  Función para mostrar el menú principal en la pantalla LCD.
+  * @param  NONE
+  * @retval NONE.
+  */
+void LCD_Main_Menu(void){
+	LCD_Clear();
+	LCD_SetCursor(0, 2);
+	LCD_WriteString("MODO DE TRABAJO");
+	LCD_SetCursor(2, 1);
+	LCD_WriteString("> MANUAL");
+	LCD_SetCursor(3, 3);
+	LCD_WriteString("AUTOMATICO");
+}
+
+/**
+  * @brief  Función para mostrar el menú del modo manual en la pantalla LCD.
+  * @param  NONE
+  * @retval NONE.
+  */
+void LCD_Manual_Menu(void){
+	LCD_Clear();
+	LCD_SetCursor(0, 7);
+	LCD_WriteString("MANUAL");
+	LCD_SetCursor(2, 1);
+	LCD_WriteString("Angulo:");
+	LCD_SetCursor(3, 1);
+	LCD_WriteString("> Regresar");
+}
+
+/**
+ * @brief  Función para mostrar el menú del modo automático en la pantalla LCD.
+ * @param  NONE
+ * @retval NONE.
+ */
+void LCD_Automatic_Menu(void){
+	LCD_Clear();
+	LCD_SetCursor(0, 5);
+	LCD_WriteString("AUTOMATICO");
+	LCD_SetCursor(2, 1);
+	LCD_WriteString("Angulo:");
+	LCD_SetCursor(3, 1);
+	LCD_WriteString("> Regresar");
 }
 
 /**

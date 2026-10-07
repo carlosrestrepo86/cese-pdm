@@ -16,9 +16,7 @@
   */
 
 #include "main.h"
-#include "lcd.h"
-#include "cmdparser.h"
-#include "Button.h"
+#include "system.h"
 
 /* ============================================================== */
 
@@ -28,7 +26,7 @@ void SystemClock_Config(void);
 
 int main(void)
 {
-	uint8_t angle;
+	//uint8_t angle;
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
@@ -36,25 +34,14 @@ int main(void)
 	/* Configure the system clock */
 	SystemClock_Config();
 
-	/* Initialize all configured peripherals */
-	GPIO_Init();
-
-	/* Inicializar el CMDParser*/
-	CMDParser_Config();
-	CMDParser_Init();
-
-	/* Inicializar la LCD */
-	LCD_Init();
-	LCD_Startup_Sequence();
-	LCD_Config();
-
 	/* Inicializar debounce para el botón */
-	ButtonFSM_Init();
+	//ButtonFSM_Init();
 
 	while (1)
 	{
-		CMDParser_Poll();
+		SYS_FSM_Update();
 		ButtonFSM_Update();
+		/*CMDParser_Poll();
 
 		if (CmdParser_GetCommand(&angle)){
 			CMDParser_Port_SendStringSize(&angle, 1);
@@ -64,7 +51,7 @@ int main(void)
 
 		if (Read_Key()){
 			CMDParser_Port_SendStringSize((uint8_t *)"Boton presionado\r\n", 18);
-		}
+		}*/
 	}
 }
 
