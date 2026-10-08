@@ -40,8 +40,9 @@ int main(void)
 	while (1)
 	{
 		SYS_FSM_Update();
-		ButtonFSM_Update();
+		Button_FSM_Update();
 		/*CMDParser_Poll();
+		 *
 
 		if (CmdParser_GetCommand(&angle)){
 			CMDParser_Port_SendStringSize(&angle, 1);

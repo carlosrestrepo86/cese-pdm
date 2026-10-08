@@ -65,8 +65,9 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim){
 	if (htim->Instance == SERVO_TIMER){
 
 		/* Peripheral clock enable */
-		__HAL_RCC_TIM2_CLK_ENABLE();
-		__HAL_RCC_GPIOA_CLK_ENABLE();
+		TIMx_CLK_ENABLE();
+		GPIOx_CLK_ENABLE();
+		;
 		/**TIM2 GPIO Configuration
 		    PA5     ------> CH1
 		*/
@@ -90,7 +91,7 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef *htim){
 	if (htim->Instance == SERVO_TIMER){
 
 		/* Peripheral clock enable */
-		__HAL_RCC_TIM2_CLK_DISABLE();
+		TIMx_CLK_DISABLE();
 
 		HAL_GPIO_DeInit(SERVO_PWM_GPIO_PORT, SERVO_PWM_PIN);
 	}

@@ -49,8 +49,8 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c){
 
 	if (hi2c->Instance == LCD_I2C){
 
-		__HAL_RCC_I2C1_CLK_ENABLE();
-		__HAL_RCC_GPIOB_CLK_ENABLE();
+		I2Cx_CLK_ENABLE();
+		GPIOx_CLK_ENABLE();
 		/**I2C1 GPIO Configuration
 		    PB6     ------> SCL
 		    PB7     ------> SDA
@@ -73,7 +73,7 @@ void HAL_I2C_MspDeInit (I2C_HandleTypeDef* hi2c){
 
 	if (hi2c->Instance == LCD_I2C){
 
-		__HAL_RCC_I2C1_CLK_DISABLE();
+		I2Cx_CLK_DISABLE();
 
 		HAL_GPIO_DeInit(LCD_GPIO_PORT, LCD_SCL_PIN | LCD_SDA_PIN);
 	}

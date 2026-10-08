@@ -14,13 +14,16 @@
 
 #define LCD_DIR 0x27 //0x3F
 
-#define LCD_I2C         I2C1
-#define CLOCK_SPEED     100000 // 100 KHz, maximo permitido 100 KHz.
-#define ADDRESSING_MODE I2C_ADDRESSINGMODE_7BIT // PCF8574 direccion con 7 bits.
-#define LCD_GPIO_PORT   GPIOB
-#define LCD_SCL_PIN     GPIO_PIN_8
-#define LCD_SDA_PIN     GPIO_PIN_9
-#define LCD_I2C_AF      GPIO_AF4_I2C1
+#define LCD_I2C            I2C1
+#define CLOCK_SPEED        100000 // 100 KHz, maximo permitido 100 KHz.
+#define ADDRESSING_MODE    I2C_ADDRESSINGMODE_7BIT // PCF8574 direccion con 7 bits.
+#define LCD_GPIO_PORT      GPIOB
+#define LCD_SCL_PIN        GPIO_PIN_8
+#define LCD_SDA_PIN        GPIO_PIN_9
+#define LCD_I2C_AF         GPIO_AF4_I2C1 // Función alternativa para I2C en PB8 y PB9.
+#define I2Cx_CLK_ENABLE()  __HAL_RCC_I2C1_CLK_ENABLE() // Habilitar el reloj para I2C.
+#define I2Cx_CLK_DISABLE() __HAL_RCC_I2C1_CLK_DISABLE() // Deshabilitar el reloj para I2C.
+#define GPIOx_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE() // HAbilitar el reloj para el puerto.
 
 typedef bool bool_t;
 

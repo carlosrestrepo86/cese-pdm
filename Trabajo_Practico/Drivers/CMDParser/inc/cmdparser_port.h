@@ -28,6 +28,9 @@ typedef bool bool_t;
 #define CMDPARSER_UART_TX_PIN    GPIO_PIN_2
 #define CMDPARSER_UART_RX_PIN    GPIO_PIN_3
 #define CMDPARSER_UART_AF        GPIO_AF7_USART2
+#define USARTx_CLK_ENABLE()      __HAL_RCC_USART2_CLK_ENABLE();  // Habilitar el reloj del USART.
+#define USARTx_CLK_DISABLE()     __HAL_RCC_USART2_CLK_DISABLE(); // Deshabilitar el reloj del USART.
+#define GPIOx_CLK_ENABLE()       __HAL_RCC_GPIOA_CLK_ENABLE();   // Habilitar el reloj de puerto A.
 
 bool_t CMDParser_Port_Init();
 bool_t CMDParser_Port_SendString(uint8_t * pstring, uint8_t size);

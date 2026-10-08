@@ -79,8 +79,8 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef *htim){
 	if(htim->Instance == ENCODER_TIMER)
 	{
 		/* Peripheral clock enable */
-		__HAL_RCC_TIM3_CLK_ENABLE();
-		__HAL_RCC_GPIOA_CLK_ENABLE();
+		TIMx_CLK_ENABLE();
+		GPIOx_CLK_ENABLE();
 
 		GPIO_InitStruct.Pin = ENCODER_CH1_PIN | ENCODER_CH2_PIN;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -100,7 +100,8 @@ void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef *htim){
 void HAL_TIM_Encoder_MspDeInit(TIM_HandleTypeDef *htim){
 
 	if(htim->Instance == ENCODER_TIMER){
-		__HAL_RCC_TIM3_CLK_DISABLE();
+
+		TIMx_CLK_DISABLE();
 
 		HAL_GPIO_DeInit(ENCODER_GPIO_PORT, ENCODER_CH1_PIN | ENCODER_CH2_PIN);
 	}

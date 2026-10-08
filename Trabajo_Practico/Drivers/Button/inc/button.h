@@ -11,8 +11,8 @@
 
 #define TIME_DEBOUNCE 40
 
-void ButtonFSM_Init(void);
-void ButtonFSM_Update(void);
+void Button_FSM_Init(void);
+void Button_FSM_Update(void);
 bool_t Read_Key(void);
 void GPIO_Init(void);
 

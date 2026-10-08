@@ -93,6 +93,15 @@ void SYS_FSM_Update(void){
 
 		select = Encoder_GetDelta();
 
+		Servomotor_SetPosition(180);
+		HAL_Delay(5000);
+		Servomotor_SetPosition(90);
+		HAL_Delay(5000);
+		Servomotor_SetPosition(0);
+		HAL_Delay(5000);
+		Servomotor_SetPosition(90);
+		HAL_Delay(5000);
+
 		if (select != 0){
 			LCD_SetCursor(2, 11);
 			LCD_WriteFloat(angle);
@@ -116,6 +125,11 @@ void SYS_FSM_Update(void){
 		break;
 
 	case SYS_ERROR:
+
+		Encoder_Stop();
+		Servomotor_Stop();
+		current_state = SYS_INIT;
+
 		break;
 
 	default:
@@ -125,35 +139,40 @@ void SYS_FSM_Update(void){
 
 static bool_t initialize_system_modules(void){
 
-	/* Initialize all configured peripherals */
+	bool_t flag = true;
+
+	/* Initializar el pin para el pulsador */
 	GPIO_Init();
 
-	/* Inicializar el CMDParser*/
-	if (!CMDParser_Config()){
-		return false;
-	}
+	/* Inicializar la comunicación UART (por defecto 115200,8N1) */
+	if (!CMD_Parser_Config())
+		flag = false;
 
-	CMDParser_Init();
-	ButtonFSM_Init();
-
-	/* Inicializar la LCD */
+	/* Inicializar la comunicación I2C para la LCD */
 	if (!LCD_Init())
-		return false;
+		flag = false;
 
+	/* Secuencias para inicializar y configurar la LCD */
 	LCD_Startup_Sequence();
 	LCD_Config();
 
+	/* Configurar el timer e iniciar el conteo de pulsos */
 	if (!Encoder_Init())
-		return false;
+		flag = false;
 
 	if (!Encoder_Start())
-		return false;
+			flag = false;
 
+	/* Configurar el timer y generar la señal */
 	if (!Servomotor_Init())
-		return false;
+		flag = false;
 
 	if (!Servomotor_Start())
-		return false;
+			flag = false;
 
-	return true;
+	/* Inicializar las MEF de Button y CMDParser */
+	CMD_Parser_Init();
+	Button_FSM_Init();
+
+	return flag;
 }

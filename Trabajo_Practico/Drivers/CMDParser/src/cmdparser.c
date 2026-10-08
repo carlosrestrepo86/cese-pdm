@@ -60,11 +60,11 @@ static bool_t CMDParser_StringToUint8(uint8_t *string, uint8_t *value);
   * @param NONE.
   * @retval NONE.
   */
-void CMDParser_Init(void){
+void CMD_Parser_Init(void){
 	current_state = CMD_IDLE;
 }
 
-bool_t CMDParser_Config(){
+bool_t CMD_Parser_Config(){
 	return CMDParser_Port_Init();
 }
 /**
@@ -72,7 +72,7 @@ bool_t CMDParser_Config(){
   * @param NONE.
   * @retval NONE.
   */
-void CMDParser_Poll(void){
+void CMD_Parser_Update(void){
 
 	switch(current_state){
 		case CMD_IDLE:
@@ -151,7 +151,7 @@ void CMDParser_Poll(void){
 
 		default:
 
-			CMDParser_Init();
+			CMD_Parser_Init();
 			buffer_index = 0;                  // Reiniciar el contador utilizado para guardar en el buffer.
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer para la proxima linea.
 			break;

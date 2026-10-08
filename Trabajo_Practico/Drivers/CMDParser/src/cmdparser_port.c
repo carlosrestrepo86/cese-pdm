@@ -86,8 +86,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
   if(huart->Instance == CMDPARSER_UART)
   {
     /* Peripheral clock enable */
-    __HAL_RCC_USART2_CLK_ENABLE();
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+	USARTx_CLK_ENABLE();
+	GPIOx_CLK_ENABLE();
     /**USART2 GPIO Configuration
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
@@ -112,7 +112,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
   if(huart->Instance == CMDPARSER_UART)
   {
     /* Peripheral clock disable */
-    __HAL_RCC_USART2_CLK_DISABLE();
+	USARTx_CLK_DISABLE();
 
     /**USART2 GPIO Configuration
     PA2     ------> USART2_TX

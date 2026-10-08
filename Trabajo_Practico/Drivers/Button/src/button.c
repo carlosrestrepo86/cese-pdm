@@ -34,7 +34,7 @@ static bool_t Delay_Read(delay_t *delay);
   * @param None
   * @retval None
   */
-void ButtonFSM_Init(){
+void Button_FSM_Init(){
 	current_state = BUTTON_UP;
 	Delay_Port_Init(&debounce_delay, TIME_DEBOUNCE);
 }
@@ -44,7 +44,7 @@ void ButtonFSM_Init(){
   * @param None
   * @retval None
   */
-void ButtonFSM_Update(){
+void Button_FSM_Update(){
 	switch(current_state){
 	case BUTTON_UP:
 		if(!Button_Port_ReadPin()){
@@ -77,7 +77,7 @@ void ButtonFSM_Update(){
 		}
 		break;
 	default:
-		ButtonFSM_Init();
+		Button_FSM_Init();
 	}
 }
 

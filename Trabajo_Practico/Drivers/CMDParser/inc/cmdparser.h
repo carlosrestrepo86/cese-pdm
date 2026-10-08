@@ -15,9 +15,9 @@
 #include "cmdparser_port.h"
 #include "main.h"
 
-void CMDParser_Init(void);
-bool_t CMDParser_Config();
-void CMDParser_Poll(void);
+void CMD_Parser_Init(void);
+bool_t CMD_Parser_Config();
+void CMD_Parser_Update(void);
 bool_t CmdParser_GetCommand(uint8_t *value);
 
 #endif /* DRIVERS_CMDPARSER_INC_CMDPARSER_H_ */
