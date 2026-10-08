@@ -97,6 +97,17 @@ void LCD_WriteInt(uint8_t number){
     LCD_WriteString(buffer_texto);
 }
 
+void LCD_WriteFloat(float number) {
+
+    char buffer_texto[6];
+
+    // Convertir el float a texto con 2 decimales (%.2f)
+    snprintf(buffer_texto, sizeof(buffer_texto), "%.1f", number);
+
+    // Enviar la cadena de texto al LCD.
+    LCD_WriteString(buffer_texto);
+}
+
 /**
   * @brief  Función para ubicar el cursor en una posición específica.
   * @param  row: Número de la fila.
@@ -153,8 +164,8 @@ void LCD_Manual_Menu(void){
 	LCD_Clear();
 	LCD_SetCursor(0, 7);
 	LCD_WriteString("MANUAL");
-	LCD_SetCursor(2, 1);
-	LCD_WriteString("Angulo:");
+	LCD_SetCursor(2, 3);
+	LCD_WriteString("Angulo: 0");
 	LCD_SetCursor(3, 1);
 	LCD_WriteString("> Regresar");
 }
@@ -168,8 +179,8 @@ void LCD_Automatic_Menu(void){
 	LCD_Clear();
 	LCD_SetCursor(0, 5);
 	LCD_WriteString("AUTOMATICO");
-	LCD_SetCursor(2, 1);
-	LCD_WriteString("Angulo:");
+	LCD_SetCursor(2, 3);
+	LCD_WriteString("Angulo: 0");
 	LCD_SetCursor(3, 1);
 	LCD_WriteString("> Regresar");
 }

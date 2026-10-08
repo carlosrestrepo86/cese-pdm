@@ -18,8 +18,8 @@
 #define CLOCK_SPEED     100000 // 100 KHz, maximo permitido 100 KHz.
 #define ADDRESSING_MODE I2C_ADDRESSINGMODE_7BIT // PCF8574 direccion con 7 bits.
 #define LCD_GPIO_PORT   GPIOB
-#define LCD_SCL_PIN     GPIO_PIN_6
-#define LCD_SDA_PIN     GPIO_PIN_7
+#define LCD_SCL_PIN     GPIO_PIN_8
+#define LCD_SDA_PIN     GPIO_PIN_9
 #define LCD_I2C_AF      GPIO_AF4_I2C1
 
 typedef bool bool_t;

@@ -16,7 +16,7 @@
 
 /* ============================================================== */
 /* ========================== TYPEDEFS ========================== */
-#define BUTTON_PIN       GPIO_PIN_1
+#define BUTTON_PIN       GPIO_PIN_8
 #define BUTTON_GPIO_PORT GPIOA
 
 typedef uint32_t tick_t;

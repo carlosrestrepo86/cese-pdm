@@ -47,24 +47,34 @@ bool_t Encoder_Stop(void){
 float Encoder_GetPosition(void){
 
 	static bool flag = false;
-	static uint16_t reference_value;
+	static uint16_t previous_value;
+	static float position = INITIAL_POS;
 	uint16_t current_value;
 	uint16_t delta_raw;
 	int16_t delta_count;
+	float angle;
 
 	if (!flag){
 		flag = true;
-		reference_value = Encoder_Port_GetCounter();
-		return INITIAL_POS;
+		previous_value = Encoder_Port_GetCounter();
+		return position;
 	}
 
 	current_value = Encoder_Port_GetCounter();
-	delta_raw = current_value - reference_value;
+	delta_raw = current_value - previous_value;
+	previous_value = current_value;
 	delta_count = (int16_t)delta_raw;
 
-	float angle = (delta_count * 360.0) / (PPR * COMBINATIONS);
+	angle = (delta_count * 360.0f) / (PPR * COMBINATIONS);
 
-	return angle;
+	position += angle;
+
+	if (position > MAX_ANGLE)
+		position = MAX_ANGLE;
+	if (position < 0.0f)
+		position = 0.0f;
+
+	return position;
 }
 
 // retorna -1, 0 o +1
@@ -105,4 +115,13 @@ int8_t Encoder_GetDelta(void){
 		return -1;
 	}else
 		return 0;
+}
+
+/**
+  * @brief Función para reiniciar el contador del timer.
+  * @param None
+  * @retval NONE.
+  */
+void Encoder_ResetCounter(void){
+	Encoder_Port_ResetCounter();
 }

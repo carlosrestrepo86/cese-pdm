@@ -65,23 +65,39 @@ void SYS_FSM_Update(void){
 		}
 
 		if (Read_Key()){
-			if (mode)
+			if (mode){
 				current_state = SYS_AUTOMATIC;
-			else
+				Encoder_ResetCounter();
+			}
+			else{
 				current_state = SYS_MANUAL;
+				Encoder_ResetCounter();
+			}
 		}
 
 		break;
 
 	case SYS_MANUAL:
 
+		float angle = Encoder_GetPosition();
+
 		if (current_state != previous_state){
 			previous_state = current_state;
 			LCD_Manual_Menu();
+			LCD_SetCursor(2, 11);
+			LCD_WriteFloat(angle);
 		}
 
 		if (Read_Key())
 			current_state = SYS_MENU;
+
+		select = Encoder_GetDelta();
+
+		if (select != 0){
+			LCD_SetCursor(2, 11);
+			LCD_WriteFloat(angle);
+			Servomotor_SetPosition(angle);
+		}
 
 		break;
 
@@ -131,6 +147,12 @@ static bool_t initialize_system_modules(void){
 		return false;
 
 	if (!Encoder_Start())
+		return false;
+
+	if (!Servomotor_Init())
+		return false;
+
+	if (!Servomotor_Start())
 		return false;
 
 	return true;

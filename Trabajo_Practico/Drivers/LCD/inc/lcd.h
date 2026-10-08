@@ -54,6 +54,7 @@ void LCD_SetCursor(uint8_t row, uint8_t column );
 void LCD_WriteChar(uint8_t character);
 void LCD_WriteString(char *text);
 void LCD_WriteInt(uint8_t number);
+void LCD_WriteFloat(float number);
 void LCD_Main_Menu(void);
 void LCD_Manual_Menu(void);
 void LCD_Automatic_Menu(void);
