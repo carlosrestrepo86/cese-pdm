@@ -117,11 +117,3 @@ int8_t Encoder_GetDelta(void){
 		return 0;
 }
 
-/**
-  * @brief Función para reiniciar el contador del timer.
-  * @param None
-  * @retval NONE.
-  */
-void Encoder_ResetCounter(void){
-	Encoder_Port_ResetCounter();
-}

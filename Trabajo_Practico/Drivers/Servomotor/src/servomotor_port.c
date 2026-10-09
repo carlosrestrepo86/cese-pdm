@@ -49,7 +49,7 @@ bool_t Servomotor_Port_Stop(void){
   * @param  uint16_t count: Cantidad de pulsos que se deben contar.
   * @retval NONE
   */
-void Servomotor_Port_SetPosition(uint8_t count){
+void Servomotor_Port_SetPosition(float count){
 	hservo.Instance->CCR1 = count;
 }
 
@@ -67,7 +67,6 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim){
 		/* Peripheral clock enable */
 		TIMx_CLK_ENABLE();
 		GPIOx_CLK_ENABLE();
-		;
 		/**TIM2 GPIO Configuration
 		    PA5     ------> CH1
 		*/

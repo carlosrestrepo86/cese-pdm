@@ -29,6 +29,6 @@ typedef bool bool_t;
 bool_t Servomotor_Port_Init(void);
 bool_t Servomotor_Port_Start(void);
 bool_t Servomotor_Port_Stop(void);
-void Servomotor_Port_SetPosition(uint8_t count);
+void Servomotor_Port_SetPosition(float count);
 
 #endif /* DRIVERS_SERVOMOTOR_INC_SERVOMOTOR_PORT_H_ */

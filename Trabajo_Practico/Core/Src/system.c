@@ -69,11 +69,9 @@ void SYS_FSM_Update(void){
 		if (Read_Key()){
 			if (mode){
 				current_state = SYS_AUTOMATIC;
-				// Encoder_ResetCounter();
 			}
 			else{
 				current_state = SYS_MANUAL;
-				//Encoder_ResetCounter();
 			}
 		}
 

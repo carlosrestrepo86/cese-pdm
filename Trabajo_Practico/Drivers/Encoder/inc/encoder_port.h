@@ -30,6 +30,5 @@ bool_t Encoder_Port_Init(void);
 bool_t Encoder_Port_Start(void);
 bool_t Encoder_Port_Stop(void);
 uint16_t Encoder_Port_GetCounter(void);
-void Encoder_Port_ResetCounter(void);
 
 #endif /* DRIVERS_ENCODER_INC_ENCODER_PORT_H_ */

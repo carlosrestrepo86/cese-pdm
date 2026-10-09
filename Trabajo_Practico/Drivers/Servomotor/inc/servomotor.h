@@ -19,6 +19,6 @@ typedef bool bool_t;
 bool_t Servomotor_Init(void);
 bool_t Servomotor_Start(void);
 bool_t Servomotor_Stop(void);
-void Servomotor_SetPosition(uint8_t angle);
+void Servomotor_SetPosition(float angle);
 
 #endif /* DRIVERS_SERVOMOTOR_INC_SERVOMOTOR_H_ */

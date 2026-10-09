@@ -59,15 +59,6 @@ uint16_t Encoder_Port_GetCounter(void){
 }
 
 /**
-  * @brief Función para reiniciar el contador del timer.
-  * @param None
-  * @retval NONE.
-  */
-void Encoder_Port_ResetCounter(void){
-	hencoder.Instance->CNT = 0;
-}
-
-/**
   * @brief  Función para inicializar TIM ENCODER MSP.
   * @param  htim: Manejador TIM.
   * @retval NONE
