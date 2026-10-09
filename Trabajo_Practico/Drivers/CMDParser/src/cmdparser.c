@@ -64,7 +64,7 @@ void CMD_Parser_Init(void){
 	current_state = CMD_IDLE;
 }
 
-bool_t CMD_Parser_Config(){
+bool_t CMD_Parser_Config(void){
 	return CMDParser_Port_Init();
 }
 /**

@@ -20,6 +20,7 @@ static SystemState_t current_state;
 static SystemState_t previous_state;
 static bool_t mode = false;
 static int8_t select = 0;
+static uint8_t angle = 0;
 
 void SYS_FSM_Init(void){
 	current_state = SYS_INIT;
@@ -44,6 +45,7 @@ void SYS_FSM_Update(void){
 		if (current_state != previous_state){
 			previous_state = current_state;
 			LCD_Main_Menu();
+			Servomotor_SetPosition(INITIAL_POS);
 		}
 
 		select = Encoder_GetDelta();
@@ -67,11 +69,11 @@ void SYS_FSM_Update(void){
 		if (Read_Key()){
 			if (mode){
 				current_state = SYS_AUTOMATIC;
-				Encoder_ResetCounter();
+				// Encoder_ResetCounter();
 			}
 			else{
 				current_state = SYS_MANUAL;
-				Encoder_ResetCounter();
+				//Encoder_ResetCounter();
 			}
 		}
 
@@ -79,34 +81,25 @@ void SYS_FSM_Update(void){
 
 	case SYS_MANUAL:
 
-		float angle = Encoder_GetPosition();
-
 		if (current_state != previous_state){
 			previous_state = current_state;
 			LCD_Manual_Menu();
 			LCD_SetCursor(2, 11);
-			LCD_WriteFloat(angle);
+			LCD_WriteInt(INITIAL_POS);
+			break;
+		}
+
+		select = Encoder_GetDelta();
+
+		if (select != 0){
+			angle = Encoder_GetPosition();
+			LCD_SetCursor(2, 11);
+			LCD_WriteInt(angle);
+			Servomotor_SetPosition(angle);
 		}
 
 		if (Read_Key())
 			current_state = SYS_MENU;
-
-		select = Encoder_GetDelta();
-
-		Servomotor_SetPosition(180);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(90);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(0);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(90);
-		HAL_Delay(5000);
-
-		if (select != 0){
-			LCD_SetCursor(2, 11);
-			LCD_WriteFloat(angle);
-			Servomotor_SetPosition(angle);
-		}
 
 		break;
 
@@ -115,6 +108,15 @@ void SYS_FSM_Update(void){
 		if (current_state != previous_state){
 			previous_state = current_state;
 			LCD_Automatic_Menu();
+			LCD_SetCursor(2, 11);
+			LCD_WriteInt(INITIAL_POS);
+			break;
+		}
+
+		if (CmdParser_GetCommand(&angle)){
+			LCD_SetCursor(2, 11);
+			LCD_WriteInt(angle);
+			Servomotor_SetPosition(angle);
 		}
 
 		if (Read_Key()){
@@ -157,18 +159,12 @@ static bool_t initialize_system_modules(void){
 	LCD_Config();
 
 	/* Configurar el timer e iniciar el conteo de pulsos */
-	if (!Encoder_Init())
+	if (!Encoder_Init() || !Encoder_Start())
 		flag = false;
-
-	if (!Encoder_Start())
-			flag = false;
 
 	/* Configurar el timer y generar la señal */
-	if (!Servomotor_Init())
+	if (!Servomotor_Init() || !Servomotor_Start())
 		flag = false;
-
-	if (!Servomotor_Start())
-			flag = false;
 
 	/* Inicializar las MEF de Button y CMDParser */
 	CMD_Parser_Init();

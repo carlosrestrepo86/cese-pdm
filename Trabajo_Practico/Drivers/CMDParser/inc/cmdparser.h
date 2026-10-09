@@ -16,7 +16,7 @@
 #include "main.h"
 
 void CMD_Parser_Init(void);
-bool_t CMD_Parser_Config();
+bool_t CMD_Parser_Config(void);
 void CMD_Parser_Update(void);
 bool_t CmdParser_GetCommand(uint8_t *value);
 

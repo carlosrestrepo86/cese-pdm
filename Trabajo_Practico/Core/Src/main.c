@@ -41,6 +41,7 @@ int main(void)
 	{
 		SYS_FSM_Update();
 		Button_FSM_Update();
+		CMD_Parser_Update();
 		/*CMDParser_Poll();
 		 *
 

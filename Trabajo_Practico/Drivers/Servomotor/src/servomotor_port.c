@@ -49,7 +49,7 @@ bool_t Servomotor_Port_Stop(void){
   * @param  uint16_t count: Cantidad de pulsos que se deben contar.
   * @retval NONE
   */
-void Servomotor_Port_SetPosition(float count){
+void Servomotor_Port_SetPosition(uint8_t count){
 	hservo.Instance->CCR1 = count;
 }
 

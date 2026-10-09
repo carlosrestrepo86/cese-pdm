@@ -42,10 +42,10 @@ bool_t Servomotor_Stop(void){
   * @param  angle: Ángulo entre 0° y 180°.
   * @retval NONE.
   */
-void Servomotor_SetPosition(float angle){
+void Servomotor_SetPosition(uint8_t angle){
 
-	float count;
+	uint8_t count;
 
-	count = SERVO_MIN_PULSE + ((angle * (SERVO_MAX_PULSE - SERVO_MIN_PULSE)) / 180.0);
+	count = SERVO_MIN_PULSE + ((angle * (SERVO_MAX_PULSE - SERVO_MIN_PULSE)) / 180);
 	Servomotor_Port_SetPosition(count);
 }

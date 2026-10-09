@@ -19,7 +19,7 @@
 
 #define PPR          20.0  // Encoder de 20 pulsos x vuelta
 #define COMBINATIONS 4.0   // Trabajando con los dos canales tenemos 4 combinaciones.
-#define INITIAL_POS  90.0  // 90°
+#define INITIAL_POS  90    // 90°
 #define MAX_ANGLE    180.0 // Máximo ángulo permitido por el servomotor.
 
 typedef bool bool_t;
@@ -27,7 +27,7 @@ typedef bool bool_t;
 bool_t Encoder_Init(void);
 bool_t Encoder_Start(void);
 bool_t Encoder_Stop(void);
-float Encoder_GetPosition(void);
+uint8_t Encoder_GetPosition(void);
 int8_t Encoder_GetDelta(void);
 void Encoder_ResetCounter(void);
 

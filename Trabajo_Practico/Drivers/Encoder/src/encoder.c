@@ -44,11 +44,11 @@ bool_t Encoder_Stop(void){
   * @param  NONE.
   * @retval float: Ángulo en referencia a la posición inicial.
   */
-float Encoder_GetPosition(void){
+uint8_t Encoder_GetPosition(void){
 
 	static bool flag = false;
 	static uint16_t previous_value;
-	static float position = INITIAL_POS;
+	static uint8_t position = INITIAL_POS;
 	uint16_t current_value;
 	uint16_t delta_raw;
 	int16_t delta_count;
@@ -71,8 +71,8 @@ float Encoder_GetPosition(void){
 
 	if (position > MAX_ANGLE)
 		position = MAX_ANGLE;
-	if (position < 0.0f)
-		position = 0.0f;
+	if (position < 0U)
+		position = 0U;
 
 	return position;
 }
