@@ -104,14 +104,12 @@ int8_t Encoder_GetDelta(void){
 	delta_raw = current_value - previous_value;
 	delta_count = (int16_t)delta_raw;
 
-	// Para el EC11 en modo x4, un clic completo equivale a un delta de 4 o -4.
-	// Umbral de >= 4 (o <= -4) para asegurar que el usuario completó el clic físico.
-	if (delta_count >= 4) {
-		previous_value = current_value; // Sincronizamos solo al completar el paso.
+	previous_value = current_value;
+
+	if (delta_count > 0) {
 		return 1;
 	}
-	else if (delta_count <= -4) {
-		previous_value = current_value; // Sincronizamos solo al completar el paso.
+	else if (delta_count < 0) {
 		return -1;
 	}else
 		return 0;
