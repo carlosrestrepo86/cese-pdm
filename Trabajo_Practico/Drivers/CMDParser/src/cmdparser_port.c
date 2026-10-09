@@ -87,7 +87,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
   {
     /* Peripheral clock enable */
 	USARTx_CLK_ENABLE();
-	GPIOx_CLK_ENABLE();
+	GPIOA_CLK_ENABLE();
     /**USART2 GPIO Configuration
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX

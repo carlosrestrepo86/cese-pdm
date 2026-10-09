@@ -20,10 +20,10 @@
 #define LCD_GPIO_PORT      GPIOB
 #define LCD_SCL_PIN        GPIO_PIN_8
 #define LCD_SDA_PIN        GPIO_PIN_9
-#define LCD_I2C_AF         GPIO_AF4_I2C1 // Función alternativa para I2C en PB8 y PB9.
-#define I2Cx_CLK_ENABLE()  __HAL_RCC_I2C1_CLK_ENABLE() // Habilitar el reloj para I2C.
+#define LCD_I2C_AF         GPIO_AF4_I2C1                // Función alternativa para I2C en PB8 y PB9.
+#define I2Cx_CLK_ENABLE()  __HAL_RCC_I2C1_CLK_ENABLE()  // Habilitar el reloj para I2C.
 #define I2Cx_CLK_DISABLE() __HAL_RCC_I2C1_CLK_DISABLE() // Deshabilitar el reloj para I2C.
-#define GPIOx_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE() // HAbilitar el reloj para el puerto.
+#define GPIOB_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE() // Habilitar el reloj para el puerto.
 
 typedef bool bool_t;
 

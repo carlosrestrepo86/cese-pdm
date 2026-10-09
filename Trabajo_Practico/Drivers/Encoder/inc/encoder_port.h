@@ -19,10 +19,10 @@
 #define ENCODER_GPIO_PORT GPIOA
 #define ENCODER_CH1_PIN   GPIO_PIN_0
 #define ENCODER_CH2_PIN   GPIO_PIN_1
-#define SERVO_PWM_AF      GPIO_AF2_TIM5 // Función alternativa para timer en PA0 y PA1.
-#define TIMx_CLK_ENABLE()   __HAL_RCC_TIM5_CLK_ENABLE()  // Habilitar el reloj del timer.
-#define TIMx_CLK_DISABLE()  __HAL_RCC_TIM5_CLK_DISABLE() // Deshabilitar el reloj del timer.
-#define GPIOx_CLK_ENABLE()  __HAL_RCC_GPIOA_CLK_ENABLE() // Habilitar el reloj del puerto.
+#define SERVO_PWM_AF      GPIO_AF2_TIM5                  // Función alternativa para timer en PA0 y PA1.
+#define TIM5_CLK_ENABLE()   __HAL_RCC_TIM5_CLK_ENABLE()  // Habilitar el reloj del timer.
+#define TIM5_CLK_DISABLE()  __HAL_RCC_TIM5_CLK_DISABLE() // Deshabilitar el reloj del timer.
+#define GPIOA_CLK_ENABLE()  __HAL_RCC_GPIOA_CLK_ENABLE() // Habilitar el reloj del puerto.
 
 typedef bool bool_t;
 

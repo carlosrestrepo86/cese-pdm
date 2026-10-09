@@ -93,15 +93,6 @@ void SYS_FSM_Update(void){
 
 		select = Encoder_GetDelta();
 
-		Servomotor_SetPosition(180);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(90);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(0);
-		HAL_Delay(5000);
-		Servomotor_SetPosition(90);
-		HAL_Delay(5000);
-
 		if (select != 0){
 			LCD_SetCursor(2, 11);
 			LCD_WriteFloat(angle);
@@ -161,7 +152,7 @@ static bool_t initialize_system_modules(void){
 		flag = false;
 
 	if (!Encoder_Start())
-			flag = false;
+		flag = false;
 
 	/* Configurar el timer y generar la señal */
 	if (!Servomotor_Init())
