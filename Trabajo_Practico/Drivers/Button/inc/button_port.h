@@ -8,14 +8,10 @@
 #ifndef DRIVERS_API_INC_API_DELAY_H_
 #define DRIVERS_API_INC_API_DELAY_H_
 
-/* ========================== INCLUDES ========================== */
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stm32f4xx_hal.h>
 
-/* ============================================================== */
-/* ========================== TYPEDEFS ========================== */
 #define BUTTON_PIN       GPIO_PIN_8
 #define BUTTON_GPIO_PORT GPIOA
 

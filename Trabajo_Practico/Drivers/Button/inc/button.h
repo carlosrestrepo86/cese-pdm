@@ -8,14 +8,15 @@
 #define DRIVERS_API_INC_API_DEBOUNCE_H_
 
 #include "button_port.h"
+#include <stdbool.h>
 
 #define TIME_DEBOUNCE 40
+
+typedef bool bool_t;
 
 void Button_FSM_Init(void);
 void Button_FSM_Update(void);
 bool_t Read_Key(void);
 void GPIO_Init(void);
-
-/* ============================================================== */
 
 #endif /* DRIVERS_API_INC_API_DEBOUNCE_H_ */

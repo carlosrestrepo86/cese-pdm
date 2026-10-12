@@ -25,8 +25,7 @@ fila 3 │ 0x54 .............. 0x67│ con bit 8 en 1 0xd4
 #ifndef DRIVERS_LCD_INC_LCD_H_
 #define DRIVERS_LCD_INC_LCD_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "lcd_port.h"
 #include <stdio.h>
 
 #define NUM_ROWS    4
@@ -43,8 +42,6 @@ fila 3 │ 0x54 .............. 0x67│ con bit 8 en 1 0xd4
 #define EN 0b0100
 #define BL 0b1000
 
-typedef bool bool_t;
-
 bool_t LCD_Init(void);
 void LCD_Startup_Sequence(void);
 void LCD_Config(void);
@@ -54,7 +51,6 @@ void LCD_SetCursor(uint8_t row, uint8_t column );
 void LCD_WriteChar(uint8_t character);
 void LCD_WriteString(char *text);
 void LCD_WriteInt(uint8_t number);
-void LCD_WriteFloat(float number);
 void LCD_Main_Menu(void);
 void LCD_Manual_Menu(void);
 void LCD_Automatic_Menu(void);

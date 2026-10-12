@@ -4,9 +4,9 @@
  *  Created on: 17/09/2026
  *      Author: c_and
  */
+#include "button_port.h"
 #include "button.h"
-
-/* ========================== TYPEDEFS ========================== */
+/* ============================================================== */
 
 typedef enum{
 	BUTTON_UP,
@@ -14,19 +14,16 @@ typedef enum{
 	BUTTON_DOWN,
 	BUTTON_RAISING,
 }debounceState_t;
-
 /* ============================================================== */
 
 static bool_t key_pressed_flag = false;
 static debounceState_t current_state;
 static delay_t debounce_delay;
-
-/* ===================== FUNCTION PROTOTYPES ==================== */
+/* ============================================================== */
 
 static void Button_Pressed();
 static void Button_Released();
 static bool_t Delay_Read(delay_t *delay);
-
 /* ============================================================== */
 
 /**

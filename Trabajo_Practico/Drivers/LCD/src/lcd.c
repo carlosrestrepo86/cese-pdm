@@ -6,7 +6,6 @@
  */
 
 #include "lcd.h"
-#include "lcd_port.h"
 
 static void send_4_bits(uint8_t byte, bool type);
 static void send_8_bits(uint8_t byte, bool type);
@@ -92,17 +91,6 @@ void LCD_WriteInt(uint8_t number){
 
     // Convertir el entero a texto.
     sprintf(buffer_texto, "%3u", number);
-
-    // Enviar la cadena de texto al LCD.
-    LCD_WriteString(buffer_texto);
-}
-
-void LCD_WriteFloat(float number) {
-
-    char buffer_texto[6];
-
-    // Convertir el float a texto con 2 decimales (%.2f)
-    snprintf(buffer_texto, sizeof(buffer_texto), "%.1f", number);
 
     // Enviar la cadena de texto al LCD.
     LCD_WriteString(buffer_texto);

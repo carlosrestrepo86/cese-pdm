@@ -5,6 +5,7 @@
  *      Author: c_and
  */
 #include "system.h"
+/* ============================================================== */
 
 typedef enum{
 	SYS_INIT,
@@ -13,20 +14,33 @@ typedef enum{
 	SYS_AUTOMATIC,
 	SYS_ERROR
 }SystemState_t;
+/* ============================================================== */
 
 static bool_t initialize_system_modules(void);
+/* ============================================================== */
 
 static SystemState_t current_state;
 static SystemState_t previous_state;
 static bool_t mode = false;
 static int8_t select = 0;
 static uint8_t angle = 0;
+/* ============================================================== */
 
+/**
+  * @brief  Función para inicializar la MEF principal.
+  * @param  NONE.
+  * @retval NONE.
+  */
 void SYS_FSM_Init(void){
 	current_state = SYS_INIT;
 	previous_state = SYS_INIT;
 }
 
+/**
+  * @brief  Función para actualizar la MEF principal.
+  * @param  NONE.
+  * @retval NONE.
+  */
 void SYS_FSM_Update(void){
 
 	switch (current_state){
@@ -111,7 +125,7 @@ void SYS_FSM_Update(void){
 			break;
 		}
 
-		if (CmdParser_GetCommand(&angle)){
+		if (CMDParser_GetCommand(&angle)){
 			LCD_SetCursor(2, 11);
 			LCD_WriteInt(angle);
 			Servomotor_SetPosition(angle);
@@ -137,6 +151,12 @@ void SYS_FSM_Update(void){
 	}
 }
 
+/**
+  * @brief  Función para inicializar todos los drivers.
+  * @param  NONE.
+  * @retval bool_t: True -> Inicialización OK.
+  *               False -> Error de inicialización.
+  */
 static bool_t initialize_system_modules(void){
 
 	bool_t flag = true;
@@ -145,7 +165,7 @@ static bool_t initialize_system_modules(void){
 	GPIO_Init();
 
 	/* Inicializar la comunicación UART (por defecto 115200,8N1) */
-	if (!CMD_Parser_Config())
+	if (!CMDParser_Config())
 		flag = false;
 
 	/* Inicializar la comunicación I2C para la LCD */
@@ -165,7 +185,7 @@ static bool_t initialize_system_modules(void){
 		flag = false;
 
 	/* Inicializar las MEF de Button y CMDParser */
-	CMD_Parser_Init();
+	CMDParser_FSM_Init();
 	Button_FSM_Init();
 
 	return flag;

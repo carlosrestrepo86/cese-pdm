@@ -65,7 +65,7 @@ bool_t Delay_Port_IsRunning(delay_t *delay){
   * @brief Función para lectura del estado del botón.
   * @param NONE.
   * @retval bool_t: True -> Botón no presionado.
-  *                False -> Botón presionado.
+  *                 False -> Botón presionado.
   */
 bool_t Button_Port_ReadPin(void){
 	return HAL_GPIO_ReadPin(BUTTON_GPIO_PORT, BUTTON_PIN);

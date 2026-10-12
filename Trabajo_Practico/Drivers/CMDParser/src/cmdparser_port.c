@@ -8,8 +8,8 @@
 #include "cmdparser_port.h"
 
 /* ============================================================== */
-static UART_HandleTypeDef hcmdparser;
 
+static UART_HandleTypeDef hcmdparser;
 /* ============================================================== */
 
 /**

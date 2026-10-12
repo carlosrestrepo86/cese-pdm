@@ -4,9 +4,11 @@
  *  Created on: 27/09/2026
  *      Author: c_and
  */
-#include "cmdparser.h"
 
+#include "cmdparser.h"
+#include "cmdparser_port.h"
 /* ============================================================== */
+
 typedef enum{
 	CMD_IDLE,
 	CMD_RECEIVING,
@@ -45,11 +47,10 @@ static uint8_t byte;
 static uint8_t angle;
 /* ============================================================== */
 
-/* ============================================================== */
 static void cmdProcessLine(void);
 static void toUpperCase(uint8_t *pchar);
 static bool_t CMDParser_SendString(uint8_t * pstring);
-static bool_t CMDParser_SendStringSize(uint8_t * pstring, uint8_t size);
+static bool_t __attribute__((unused)) CMDParser_SendStringSize(uint8_t * pstring, uint8_t size);
 static bool_t CMDParser_ReceiveStringSize(uint8_t * pstring, uint8_t size);
 static uint16_t getStringLength(uint8_t * pstring);
 static void CMDParser_PrintHelp(void);
@@ -60,19 +61,26 @@ static bool_t CMDParser_StringToUint8(uint8_t *string, uint8_t *value);
   * @param NONE.
   * @retval NONE.
   */
-void CMD_Parser_Init(void){
+void CMDParser_FSM_Init(void){
 	current_state = CMD_IDLE;
 }
 
-bool_t CMD_Parser_Config(void){
+/**
+  * @brief Función para la configuración del puerto UART.
+  * @param NONE.
+  * @retval bool_t: False -> Si se presenta un error en la inicialización.
+  *                 True  -> Puerto USART inicializado correctamente.
+  */
+bool_t CMDParser_Config(void){
 	return CMDParser_Port_Init();
 }
+
 /**
   * @brief Función para actualizar la MEF.
   * @param NONE.
   * @retval NONE.
   */
-void CMD_Parser_Update(void){
+void CMDParser_FSM_Update(void){
 
 	switch(current_state){
 		case CMD_IDLE:
@@ -119,9 +127,8 @@ void CMD_Parser_Update(void){
 
 			if (status == CMD_OK)
 				current_state = CMD_EXEC;
-			else{
+			else
 				current_state = CMD_ERROR;
-			}
 			break;
 
 		case CMD_EXEC:
@@ -151,14 +158,20 @@ void CMD_Parser_Update(void){
 
 		default:
 
-			CMD_Parser_Init();
+			CMDParser_FSM_Init();
 			buffer_index = 0;                  // Reiniciar el contador utilizado para guardar en el buffer.
 			memset(buffer, 0, sizeof(buffer)); // Limpiar el buffer para la proxima linea.
 			break;
 	}
 }
 
-bool_t CmdParser_GetCommand(uint8_t *value){
+/**
+  * @brief Función para verificar si hay un comando pendiente y retornar su valor.
+  * @param uint8_t: Valor del ángulo recibido.
+  * @retval bool_t: False -> No hay un comando pendiente por procesar.
+  *                 True  -> Hay un comando para procesar.
+  */
+bool_t CMDParser_GetCommand(uint8_t *value){
 
 	if (value == NULL)
 		return false;
@@ -217,6 +230,13 @@ static void cmdProcessLine(void){
 	}
 }
 
+/**
+  * @brief Función para coversión de un número en string a uint8_t.
+  * @param uint8_t string: Número en formato texto.
+  * @param uint8_t value: Número en formato uint8_t (luego de la conversión).
+  * @retval bool_t: False -> Error en la conversión.
+  *                 True  -> Conversión correcta.
+  */
 static bool_t CMDParser_StringToUint8(uint8_t *string, uint8_t *value){
 
 	uint16_t number = 0;
@@ -251,14 +271,14 @@ static bool_t CMDParser_StringToUint8(uint8_t *string, uint8_t *value){
   * @retval NONE.
   */
 static void CMDParser_PrintHelp(void){
-	CMDParser_SendString((uint8_t*)"Comandos disponibles:\r\n");
-	CMDParser_SendString((uint8_t*)"SERVO,50\r\n");
+	CMDParser_SendString((uint8_t*)"Posicionar servomotor:\r\n");
+	CMDParser_SendString((uint8_t*)"SERVO,<0-180>\r\n");
 }
 
 /**
-  * @brief Funcion para pasar las letras minusculas a mayusculas.
+  * @brief Función para pasar las letras minúsculas a mayúsculas.
   * @param uint8_t *pchar: Puntero al caracter.
-  * @retval Si el caracter esta en minuscula se realiza la conversion a mayuscula.
+  * @retval Si el caracter esta en minúscula se realiza la conversion a mayúscula.
   */
 static void toUpperCase(uint8_t *pchar){
 

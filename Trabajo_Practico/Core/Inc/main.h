@@ -5,11 +5,7 @@
 extern "C" {
 #endif
 
-/* ==================== Includes ==================== */
-
 #include "stm32f4xx_hal.h"
-
-/* ==================== Definiciones de pines ==================== */
 
 /* User Button */
 #define B1_Pin              GPIO_PIN_13
@@ -28,20 +24,6 @@ extern "C" {
 
 //#define SWO_Pin             GPIO_PIN_3
 //#define SWO_GPIO_Port       GPIOB
-
-/* ==================== Tipos de datos ==================== */
-
-/* typedefs propios de la aplicación */
-
-/* ==================== Constantes ==================== */
-
-/* #define propias de la aplicación */
-
-/* ==================== Macros ==================== */
-
-/* Macros propias de la aplicación */
-
-/* ==================== Prototipos ==================== */
 
 void Error_Handler(void);
 
