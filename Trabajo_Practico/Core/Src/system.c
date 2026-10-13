@@ -71,22 +71,21 @@ void SYS_FSM_Update(void){
 				LCD_WriteChar(' ');
 				LCD_SetCursor(3, 1);
 				LCD_WriteChar('>');
-			} else {
+			}else if (select == -1){
 				mode = false;
 				LCD_SetCursor(3, 1);
 				LCD_WriteChar(' ');
 				LCD_SetCursor(2, 1);
 				LCD_WriteChar('>');
-			}
+			} else
+				current_state = SYS_ERROR;
 		}
 
 		if (Read_Key()){
-			if (mode){
+			if (mode)
 				current_state = SYS_AUTOMATIC;
-			}
-			else{
+			else
 				current_state = SYS_MANUAL;
-			}
 		}
 
 		break;

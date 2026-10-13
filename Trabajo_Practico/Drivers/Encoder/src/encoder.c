@@ -44,7 +44,7 @@ bool_t Encoder_Stop(void){
   * @param  NONE.
   * @retval float: Ángulo en referencia a la posición inicial.
   */
-uint8_t Encoder_GetPosition(void){
+int16_t Encoder_GetPosition(void){
 
 	static bool flag = false;
 	static uint16_t previous_value;
@@ -52,7 +52,6 @@ uint8_t Encoder_GetPosition(void){
 	uint16_t current_value;
 	uint16_t delta_raw;
 	int16_t delta_count;
-	float angle;
 
 	if (!flag){
 		flag = true;
@@ -61,13 +60,11 @@ uint8_t Encoder_GetPosition(void){
 	}
 
 	current_value = Encoder_Port_GetCounter();
-	delta_raw = current_value - previous_value;
+	delta_raw = current_value - previous_value; // Calcular diferencia sin importar desbordamientos.
+	delta_count = (int16_t)delta_raw;           // Para pasar saltos grandes a números negativos con giro a la izquierda.
 	previous_value = current_value;
-	delta_count = (int16_t)delta_raw;
 
-	angle = (delta_count * 360.0f) / (PPR * COMBINATIONS);
-
-	position += angle;
+	position += (delta_count * 360) / (PPR * COMBINATIONS); // Cálculo del ángulo de desplazamiento.
 
 	if (position > MAX_ANGLE)
 		position = MAX_ANGLE;
