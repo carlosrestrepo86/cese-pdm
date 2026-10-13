@@ -35,12 +35,12 @@ fila 3 │ 0x54 .............. 0x67│ con bit 8 en 1 0xd4
 #define ROW3        0x94
 #define ROW4        0xd4
 
-#define COMMAND 0b0000
-#define DATA    0b0001
+#define COMMAND 0x00
+#define DATA    0x01
 
 //Bits de ENABLE y BACK LIGHT
-#define EN 0b0100
-#define BL 0b1000
+#define EN 0x04
+#define BL 0x08
 
 bool_t LCD_Init(void);
 void LCD_Startup_Sequence(void);

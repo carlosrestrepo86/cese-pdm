@@ -48,7 +48,7 @@ uint8_t Encoder_GetPosition(void){
 
 	static bool flag = false;
 	static uint16_t previous_value;
-	static uint8_t position = INITIAL_POS;
+	static int16_t position = INITIAL_POS;
 	uint16_t current_value;
 	uint16_t delta_raw;
 	int16_t delta_count;
@@ -71,8 +71,8 @@ uint8_t Encoder_GetPosition(void){
 
 	if (position > MAX_ANGLE)
 		position = MAX_ANGLE;
-	if (position < 0U)
-		position = 0U;
+	if (position < 0)
+		position = 0;
 
 	return position;
 }

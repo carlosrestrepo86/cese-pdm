@@ -16,7 +16,7 @@
 typedef bool bool_t;
 
 #define UART_TIMEOUT_MS 50 // 115200, 11.520 bytes por segundo = 1 byte cada 0.08 ms para 128 aprox 11 ms
-#define MAX_STRING_SIZE 256
+#define MAX_STRING_SIZE 64
 
 #define CMDPARSER_UART  USART2
 #define BAUDRATE        115200
