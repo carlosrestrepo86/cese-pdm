@@ -60,11 +60,11 @@ int16_t Encoder_GetPosition(void){
 	}
 
 	current_value = Encoder_Port_GetCounter();
-	delta_raw = current_value - previous_value;                                       // Calcular diferencia sin importar desbordamientos.
-	delta_count = (int16_t)delta_raw;                                                 // Para pasar saltos grandes a números negativos con giro a la izquierda.
+	delta_raw = current_value - previous_value;               // Calcular diferencia sin importar desbordamientos.
+	delta_count = (int16_t)delta_raw;                         // Para pasar saltos grandes a números negativos con giro a la izquierda.
 	previous_value = current_value;
 
-	position += (delta_count * 360) / (PPR * COMBINATIONS);                          // Cálculo del ángulo de desplazamiento.
+	position += (delta_count * 360) / (PPR * COMBINATIONS);  // Cálculo del ángulo de desplazamiento.
 
 	if (position > MAX_ANGLE)
 		position = MAX_ANGLE;
