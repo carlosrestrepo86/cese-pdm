@@ -159,6 +159,6 @@ SERVO,40\r\n
 
 Ing. Carlos Andrés Restrepo Restrepo.
 
-Proyecto desarrollado como parte de la formación en sistemas embebidos.
+Proyecto desarrollado para la materia de Programación de Microprocesadores.
 
 

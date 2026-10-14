@@ -32,8 +32,13 @@ int main(void)
 
 	while (1)
 	{
+		/* Actualizar la MEF principal */
 		SYS_FSM_Update();
+
+		/* Actualizar la MEF para lectura del pulsador */
 		Button_FSM_Update();
+
+		/* Actualizar la MEF para recepción de comandos por UART */
 		CMDParser_FSM_Update();
 	}
 }
